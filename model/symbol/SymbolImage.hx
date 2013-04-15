@@ -38,33 +38,15 @@ class SymbolImage extends Symbol
 			frameHeight = bmd.height;
 		}
 		
-		frames = [];
-		var frameCount:Int = Math.ceil( bmd.width / frameWidth );
-		var frame:BitmapData;
-		var r:Rectangle = new Rectangle( 0, 0, frameWidth, frameHeight );
-		var p:Point = new Point();
-		for ( i in 0...frameCount ) {
-			r.x = i * frameWidth;
-			r.width = Math.min( frameWidth, bmd.width - r.x );
-			frame = new BitmapData( frameWidth, frameHeight );
-			frame.copyPixels( bmd, r, p );
-			frames.push( frame );
-		}
-		
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
+		parseFrames( bmd );
 		
 		size = new Rectangle( 0, 0, frameWidth, frameHeight );
 	}
 
 	private function getPNGBytes():Bytes {
-		var bitmapData:BitmapData = new BitmapData( frames.length * frameWidth, frameWidth );
-		var r:Rectangle = new Rectangle( 0, 0, frameWidth, frameHeight );
-		var p:Point = new Point();
-		for ( i in 0...frames.length ) {
-			p.x = i * frameWidth;
-			bitmapData.copyPixels( frames[i], r, p );
-		}
+		var bitmapData:BitmapData = getFullCanvas();
 		
         #if flash
 			var data:ByteArray = PNGEncoder.encode( bitmapData );
@@ -91,4 +73,40 @@ class SymbolImage extends Symbol
 		return export;
 	}
    
+	private function parseFrames( bmd:BitmapData ):Void {
+		frames = [];
+		var frameCount:Int = Math.ceil( bmd.width / frameWidth );
+		var frame:BitmapData;
+		var r:Rectangle = new Rectangle( 0, 0, frameWidth, frameHeight );
+		var p:Point = new Point();
+		for ( i in 0...frameCount ) {
+			r.x = i * frameWidth;
+			r.width = Math.min( frameWidth, bmd.width - r.x );
+			frame = new BitmapData( frameWidth, frameHeight, true, 0x00000000 );
+			frame.copyPixels( bmd, r, p );
+			frames.push( frame );
+		}		
+	}
+	
+	private function getFullCanvas():BitmapData	{
+		var bitmapData:BitmapData = new BitmapData( frames.length * frameWidth, frameHeight);
+		var r:Rectangle = new Rectangle( 0, 0, frameWidth, frameHeight );
+		var p:Point = new Point();
+		for ( i in 0...frames.length ) {
+			p.x = i * frameWidth;
+			bitmapData.copyPixels( frames[i], r, p );
+		}
+		return bitmapData;
+	}
+	
+	public function resize( global:Bool, w:Int, h:Int ):Void {
+		if ( global ) {
+			var bitmapData:BitmapData = getFullCanvas();
+			this.frameWidth = w;
+			this.frameHeight = h;
+			parseFrames( bitmapData );
+		} else {
+			// TODO resize image locally
+		}
+	}
 }
