@@ -86,11 +86,11 @@ class Library
             parse.push( e );
 
         var e:Xml;
-        while ( cycle < 10 && parse.length > 0 ) {
+        while ( cycle < 100 && parse.length > 0 ) {
             e = parse.shift();
             s = Symbol.parse( e, this, libData );
             if ( s == null ) {
-                trace("could not parse "+e.nodeName);
+                //trace("could not parse "+e.nodeName);
                 parse.push( e );
             } else {
                 symbols.push( s );

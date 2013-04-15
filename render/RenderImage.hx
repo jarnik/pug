@@ -23,7 +23,12 @@ class RenderImage extends Render
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
-		bitmap.bitmapData = image.frames[ frame ];
+
+		var imageFrame:Int = frame;
+		if ( effect != null )
+			imageFrame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
+		
+		bitmap.bitmapData = image.frames[ imageFrame ];
 		super.render( frame, applyTransforms );
 		
 	}
