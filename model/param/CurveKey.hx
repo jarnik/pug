@@ -32,9 +32,11 @@ class CurveKey
 	
 	public function setValues( values:Array<Value> ):Void {
 		this.values = values;
-        keyTypes = [];
-        for ( i in 0...values.length )
-            keyTypes.push( LINEAR );
+		if ( keyTypes.length == 0 ) {
+			keyTypes = [];
+			for ( i in 0...values.length )
+				keyTypes.push( LINEAR );
+		}
 	}
 
     public function export( export:EXPORT_PUG ):EXPORT_PUG {
@@ -43,7 +45,18 @@ class CurveKey
         var vals:Array<Dynamic> = [];
         for ( v in values )
             vals.push( v.getValue() );
-        xml.set("values",vals.join(","));
+        xml.set("values", vals.join(","));
+		var keys:Array<String> = [];
+		for ( k in keyTypes ) {
+			switch ( k ) {
+				case HOLD:
+					keys.push( "H" );
+				case LINEAR:
+					keys.push( "L" );
+				default:
+			}
+		}
+		xml.set("nodes", keys.join(","));
         export.xml = xml;        
 		return export;
 	}
@@ -58,6 +71,10 @@ class CurveKey
 			v = 0;
 			v1 = values[ i ];
 			v2 = k.values[ i ];
+			
+			if ( keyTypes[ i ] == HOLD )
+				ratio = 0;
+			
 			switch( Type.getClass( v1 ) ) {
 				case ValueFloat:
 					v = cast( v1, ValueFloat ).float * (1 - ratio) + cast( v2, ValueFloat ).float * (ratio);

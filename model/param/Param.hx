@@ -5,6 +5,7 @@ import pug.model.Library;
 import pug.model.value.ValueAngle;
 import pug.model.value.ValueFloat;
 import pug.model.value.ValueFrame;
+import pug.model.param.CurveKey;
 
 /**
  * ...
@@ -63,11 +64,12 @@ class Param
         return newValues;
     }
 	
-	public function addKey( frame:Int, values:Array<Value> ):Void {
+	public function addKey( frame:Int, values:Array<Value> ):CurveKey {
 		var k:CurveKey = new CurveKey();
 		k.frame = frame;
 		k.setValues( values );
 		keys.push( k );
+		return k;
 	}
 	
 	private function getValue( v:Value ):Dynamic {
@@ -77,29 +79,37 @@ class Param
 		return v.getValue();
 	}
 	
-	private function getSimpleValues(v:Array<Value>, frame:Float):Array<Dynamic> {        
-        this.tempFrame = frame;
+	//private function getSimpleValues(v:Array<Value>, frame:Float):Array<Dynamic> {        
+	private function getSimpleValues(k:CurveKey, frame:Float):Array<Dynamic> {        
+		var v:Array<Value> = values;
+		if ( k != null ) {
+			v = k.values;
+			if ( Std.is( v[0], ValueFrame ) && k.keyTypes[ 0 ] == HOLD ) {
+				frame = 0;
+			}
+		}
+		this.tempFrame = frame;
 		return Lambda.array( Lambda.map( v, getValue ) );
 	}
 	
 	public function getValues( frame:Float ):Array<Dynamic> {
 		if ( keys.length == 0 )
-			return getSimpleValues( values, frame );
+			return getSimpleValues( null, frame );
 		if ( keys.length == 1 )
-			return getSimpleValues( keys[0].values, frame - keys[0].frame );
+			return getSimpleValues( keys[0], frame - keys[0].frame );
 		var nextKey:Int = -1;
 		for ( i in 0...keys.length ) {
 			if ( keys[ i ].frame == frame )
-				return getSimpleValues( keys[i].values, frame - keys[i].frame );
+				return getSimpleValues( keys[i], frame - keys[i].frame );
 			if ( keys[ i ].frame > frame ) {
 				nextKey = i;
 				break;
 			}
 		}
 		if ( nextKey == -1 )
-			return getSimpleValues( keys[ keys.length - 1 ].values, frame - keys[ keys.length - 1 ].frame );
+			return getSimpleValues( keys[ keys.length - 1 ], frame - keys[ keys.length - 1 ].frame );
 		if ( nextKey == 0 )
-			return getSimpleValues( keys[ 0 ].values, frame - keys[ 0 ].frame );
+			return getSimpleValues( keys[ 0 ], frame - keys[ 0 ].frame );
 			
 		return mixKeys( 
 			keys[ nextKey - 1 ], 
@@ -157,6 +167,17 @@ class Param
             vals.push( v );
             v.parse( valsImport[ i ] );
         }
-        addKey( f, vals );
+		var k:CurveKey = addKey( f, vals );
+		if ( x.get("nodes") != null ) {
+			var nodes:Array<String> = x.get("nodes").split(",");
+			k.keyTypes = [];
+			for ( n in nodes ) {
+				switch ( n ) {
+					case "H": k.keyTypes.push( HOLD );
+					case "L": k.keyTypes.push( LINEAR );
+					default:
+				}
+			}
+		}
     }
 }
