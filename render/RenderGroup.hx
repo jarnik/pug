@@ -4,6 +4,11 @@ import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.IEffectGroup;
 import nme.display.DisplayObject;
 
+enum STICKER {
+	ADD( d:DisplayObject );
+	HIDE_RENDERS;
+}
+
 /**
  * ...
  * @author Jarnik
@@ -11,14 +16,14 @@ import nme.display.DisplayObject;
 class RenderGroup extends Render
 {
     public var cachedInstances:Hash<Render>;
-    public var stickers:Hash<DisplayObject>;
+    public var stickers:Hash<STICKER>;
 	public var group:IEffectGroup;
 	public var frameCount:Int;
 
 	public function new( effect:Effect, group:IEffectGroup ) 
 	{
 		super( effect );
-		stickers = new Hash<DisplayObject>();
+		stickers = new Hash<STICKER>();
 		loadGroup( group );
 	}
 	
@@ -36,7 +41,11 @@ class RenderGroup extends Render
 	}
 
     public function addSticker( id:String, sprite:DisplayObject ):Void {
-        stickers.set( id, sprite );
+        stickers.set( id+"_ADD", ADD( sprite ) );
+    }
+	
+	public function addStickerHideRenders( id:String ):Void {
+        stickers.set( id+"_HIDE", HIDE_RENDERS );
     }
 	
 	override private function onSetFrame( f:Int ):Void {
@@ -80,10 +89,21 @@ class RenderGroup extends Render
 		
 		var s:DisplayObject;
 		for ( k in stickers.keys() ) {
-			r = fetch( k );
-			s = stickers.get( k );
-			if ( r != null && !r.contains( s ) )
-				r.addChild( s );
+			r = fetch( k.split( "_" )[0] );
+			if ( r != null ) {
+				switch ( stickers.get( k ) ) {
+					case ADD( d ):
+						if ( !r.contains( d ) )
+							r.addChild( d );
+					case HIDE_RENDERS:
+						/*
+						for ( i in 0...r.numChildren )
+							if ( Std.is( r.getChildAt( i ), Render ) )
+								r.getChildAt( i ).visible = false;*/
+						if ( Std.is( r, RenderImage ) )
+							cast( r, RenderImage ).bitmap.visible = false;
+				}
+			}
 		}
 	}
 	
