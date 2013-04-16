@@ -58,6 +58,8 @@ class RenderGroup extends Render
 		
 		frame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
 		
+		frame = frame % frameCount;
+		
 		var r:Render;
         var e:Effect;
         var f:Int;
