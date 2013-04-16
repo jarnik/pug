@@ -72,6 +72,12 @@ class Render extends Sprite
 		}
 	}
 	
+	public function update( timeElapsed:Float ):Void {
+		if ( player != null ) {
+			player.update( timeElapsed );
+		}
+	}
+	
 	public function play( loop:Bool = false, fps:Float = 30 ):Void {
 		if ( player == null ) {
 			player = new Player();
@@ -81,7 +87,7 @@ class Render extends Sprite
 	}
 	
 	private function onSetFrame( f:Int ):Void {
-		render( f );
+		render( f, false );
 	}
 	
 	private function applyTransform( g:GizmoTransform, d:DisplayObject, frame:Int = 0 ):Void {
