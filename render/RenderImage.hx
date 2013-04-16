@@ -27,6 +27,7 @@ class RenderImage extends Render
 		var imageFrame:Int = frame;
 		if ( effect != null )
 			imageFrame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
+		imageFrame = imageFrame % image.frames.length;
 		
 		bitmap.bitmapData = image.frames[ imageFrame ];
 		super.render( frame, applyTransforms );
