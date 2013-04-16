@@ -32,6 +32,7 @@ class Render extends Sprite
 		var f:Effect;
         if ( Std.is( s, SymbolLayer ) ) {
 			r = new RenderGroupStates( new EffectSymbolLayer( s ) );
+			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
 			//if ( state != null )
 			//	cast( r, pug.render.RenderGroupStates ).switchState( state );
 			return r;
