@@ -41,13 +41,13 @@ class RenderGroup extends Render
 	
 	override private function onSetFrame( f:Int ):Void {
 		if ( player.loop )  
-			render( f % frameCount );
+			render( f % frameCount, false );
 		else {
 			if ( f < frameCount ) {
-				render( f );
+				render( f, false );
 			} else {
 				player.stop();
-				render( frameCount - 1 );
+				render( frameCount - 1, false );
 			}
 		}
 	}
@@ -77,11 +77,23 @@ class RenderGroup extends Render
 		
 		var s:DisplayObject;
 		for ( k in stickers.keys() ) {
-			r = cachedInstances.get( k );
+			r = fetch( k );
 			s = stickers.get( k );
 			if ( r != null && !r.contains( s ) )
 				r.addChild( s );
 		}
+	}
+	
+	public function fetch( id:String ):Render {
+		var child:String = id.split(".")[0];
+		var r:Render = cachedInstances.get( child );
+		if ( r == null )
+			return null;
+		if ( child == id )
+			return r;
+		if ( Std.is( r, RenderGroup ) )
+			return cast( r, RenderGroup ).fetch( id.substr( child.length+1 ) );
+		return null;
 	}
 	
 	private function isVisible( e:Effect, frame:Int ):Bool { 
