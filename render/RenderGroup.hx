@@ -72,7 +72,8 @@ class RenderGroup extends Render
             }
 			addChild( r );
             f = frame - group.children[ i ].frameStart;
-			r.render( f );
+			if ( r.renderUpdatesEnabled )
+				r.render( f );
 		}
 		
 		var s:DisplayObject;

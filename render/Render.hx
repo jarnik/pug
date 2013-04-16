@@ -58,10 +58,12 @@ class Render extends Sprite
 	
 	public var effect:Effect;
 	public var player:Player;
+	public var renderUpdatesEnabled:Bool;
 	
 	public function new( effect:Effect ) 
 	{
 		super();
+		renderUpdatesEnabled = true;
 		this.effect = effect;
 	}
 	
