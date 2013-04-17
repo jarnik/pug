@@ -89,6 +89,11 @@ class Render extends Sprite
 		player.play( loop, fps );
 	}
 	
+	public function stop():Void {
+		if ( player != null )
+			player.stop();
+	}
+	
 	private function onSetFrame( f:Int ):Void {
 		render( f, false );
 	}
