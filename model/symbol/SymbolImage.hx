@@ -82,7 +82,7 @@ class SymbolImage extends Symbol
 		for ( i in 0...frameCount ) {
 			r.x = i * frameWidth;
 			r.width = Math.min( frameWidth, bmd.width - r.x );
-			#if flash
+			#if !neko
 			frame = new BitmapData( frameWidth, frameHeight, true, 0x00000000 );
 			#else
 			frame = new BitmapData( frameWidth, frameHeight, true, { rgb: 0, a: 0 } );
