@@ -1,6 +1,7 @@
 package pug.model;
 
 import pug.model.symbol.Symbol;
+import pug.model.symbol.SymbolImage;
 import nme.Assets;
 import Xml;
 import pug.model.utils.XmlFormatter;
@@ -110,6 +111,15 @@ class Library
         var input:haxe.io.BytesInput = new haxe.io.BytesInput( BAtoBytes( ba ) );
         importLibDataPug( input );
     }
+	
+	public function importBitmap( id:String, bmd:BitmapData ):Void {
+		var duplicate:Symbol = get( id );
+		if ( duplicate != null ) {
+			if ( Std.is( duplicate, SymbolImage ) )
+				cast( duplicate, SymbolImage ).updateBitmap( bmd );
+		} else
+			symbols.push( new SymbolImage( id, bmd ) );
+	}
 
     public static function BAtoBytes( ba:ByteArray ):Bytes {
         var b:Bytes = Bytes.alloc( ba.length );
