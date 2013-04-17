@@ -1,5 +1,6 @@
 package pug.render;
 import flash.display.DisplayObject;
+import nme.geom.Point;
 import pug.model.effect.Effect;
 import pug.model.effect.EffectSymbol;
 import pug.model.effect.EffectSymbolLayer;
@@ -73,6 +74,16 @@ class Render extends Sprite
 			applyTransform( effect.gizmoTransform, this, frame );
 			applyAttributes( effect.gizmoAttributes, this, frame );			
 		}
+	}
+	
+	
+	
+	public function alignTo( d:DisplayObject ):Void {
+		var p:Point = new Point(0, 0);		
+		p = d.localToGlobal( p );
+		p = parent.globalToLocal( p );
+		x = p.x;
+		y = p.y;
 	}
 	
 	public function update( timeElapsed:Float ):Void {
