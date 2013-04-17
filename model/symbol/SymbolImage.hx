@@ -72,6 +72,10 @@ class SymbolImage extends Symbol
 		
 		return export;
 	}
+	
+	public function updateBitmap( bmd:BitmapData ):Void {
+		parseFrames( bmd );
+	}
    
 	private function parseFrames( bmd:BitmapData ):Void {
 		frames = [];
