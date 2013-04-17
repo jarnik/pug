@@ -34,4 +34,8 @@ class RenderImage extends Render
 		
 	}
 	
+	override public function hideContents():Void {
+		bitmap.visible = false;
+	}
+	
 }

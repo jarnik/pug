@@ -86,6 +86,9 @@ class Render extends Sprite
 		y = p.y;
 	}
 	
+	public function hideContents():Void {
+	}
+	
 	public function update( timeElapsed:Float ):Void {
 		if ( player != null ) {
 			player.update( timeElapsed );

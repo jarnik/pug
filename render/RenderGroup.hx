@@ -97,15 +97,15 @@ class RenderGroup extends Render
 						if ( !r.contains( d ) )
 							r.addChild( d );
 					case HIDE_RENDERS:
-						/*
-						for ( i in 0...r.numChildren )
-							if ( Std.is( r.getChildAt( i ), Render ) )
-								r.getChildAt( i ).visible = false;*/
-						if ( Std.is( r, RenderImage ) )
-							cast( r, RenderImage ).bitmap.visible = false;
+						r.hideContents();
 				}
 			}
 		}
+	}
+	
+	override public function hideContents():Void {
+		for ( r in cachedInstances )
+			r.visible = false;
 	}
 	
 	public function fetch( id:String ):Render {
