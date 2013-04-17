@@ -42,11 +42,11 @@ class RenderGroup extends Render
 	}
 
     public function addSticker( id:String, sprite:DisplayObject ):Void {
-        stickers.set( id+"_ADD", ADD( sprite ) );
+        stickers.set( id+"===ADD", ADD( sprite ) );
     }
 	
 	public function addStickerHideRenders( id:String ):Void {
-        stickers.set( id+"_HIDE", HIDE_RENDERS );
+        stickers.set( id+"===HIDE", HIDE_RENDERS );
     }
 	
 	override private function onSetFrame( f:Int ):Void {
@@ -90,7 +90,7 @@ class RenderGroup extends Render
 		
 		var s:DisplayObject;
 		for ( k in stickers.keys() ) {
-			r = fetch( k.split( "_" )[0] );
+			r = fetch( k.split( "===" )[0] );
 			if ( r != null ) {
 				switch ( stickers.get( k ) ) {
 					case ADD( d ):
