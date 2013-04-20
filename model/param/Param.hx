@@ -50,6 +50,16 @@ class Param
             k.values[ i ].setValue( values[ i ] );
         }
     }
+	
+	private function cmpKeysByFrames( a:CurveKey, b:CurveKey ):Int {
+		if (a.frame < b.frame) return -1;
+		if (a.frame > b.frame) return 1;
+		return 0;
+	}
+	
+	public function sortKeysByFrames():Void {
+		keys.sort( cmpKeysByFrames );
+	}
 
     private function typeValues( data:Array<Dynamic> ):Array<Value> {
         var newValues:Array<Value> = [];
