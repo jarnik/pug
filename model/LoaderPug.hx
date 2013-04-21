@@ -131,7 +131,9 @@ class LoaderPug
 			//for ( k in libData.images.keys() ) 
 				//trace( "img "+k+" "+libData.images.get( k ).width+"x"+libData.images.get( k ).height );
             //onLibDataLoaded.dispatch( libData );
-            input.close();
+			#if !neko
+				input.close();
+			#end
 			onLibDataLoaded.dispatch( libData );
         }
 	}
