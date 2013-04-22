@@ -1,6 +1,7 @@
 package pug.model.effect;
 import nme.geom.Point;
 import pug.model.symbol.Symbol;
+import pug.model.gizmo.GizmoParticles;
 
 /**
  * ...
@@ -12,7 +13,7 @@ class EffectParticleEmitter extends Effect
 
 	public function new() 
 	{
-		super();
+		super( [] );
 		gizmos.push( gizmoParticles = new GizmoParticles() );
 	}
 	

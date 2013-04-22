@@ -5,6 +5,7 @@ import pug.model.effect.Effect;
 import pug.model.effect.EffectSymbol;
 import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.EffectGroup;
+import pug.model.effect.EffectParticleEmitter;
 import pug.model.effect.IEffectGroup;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolLayer;
@@ -53,8 +54,10 @@ class Render extends Sprite
             } else
 				return null;
 		} else if( Std.is( e, EffectGroup ) ) {
-			return new RenderGroup( e, cast( e, EffectGroup ) );
-		}
+			return new RenderGroup( e, cast( e, EffectGroup ) );	
+		} else if( Std.is( e, EffectParticleEmitter ) ) {
+			return new RenderParticles( e );	
+        }
 		return null;
 	}
 	
