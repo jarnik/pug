@@ -34,6 +34,8 @@ typedef EXPORT_PUG = {
 class Library
 {
 
+    public static var lib:Library;
+
 	public var symbols:Array<Symbol>;
 	private var loaderPug:LoaderPug;
 	public var onLibLoaded:DirectSignaler<Void>;
@@ -45,6 +47,7 @@ class Library
 		loaderPug.onLibDataLoaded.bind( importLibData );
 		
 		onLibLoaded = new DirectSignaler(this);
+        lib = this;
 	}
 	
 	public function export():EXPORT_PUG {
