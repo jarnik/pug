@@ -19,7 +19,8 @@ class RenderImage extends Render
 		addChild( bitmap = new Bitmap() );
 		bitmap.bitmapData = image.frames[ 0 ];
         bitmap.x = -image.frameWidth/2;
-        bitmap.y = -image.frameHeight/2;
+        bitmap.y = -image.frameHeight / 2;
+		frameCount = image.frames.length;
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {

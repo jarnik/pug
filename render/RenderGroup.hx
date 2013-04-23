@@ -17,8 +17,7 @@ class RenderGroup extends Render
 {
     public var cachedInstances:Hash<Render>;
     public var stickers:Hash<STICKER>;
-	public var group:IEffectGroup;
-	public var frameCount:Int;
+	public var group:IEffectGroup;	
 
 	public function new( effect:Effect, group:IEffectGroup ) 
 	{

@@ -24,8 +24,8 @@ class GizmoParticles extends Gizmo
 			"Particles",
 			[
 				paramTemplate = new Param( "Template",[ new ValueString(), new ValueString() ] ),
-				paramCount = new Param( "Count",[ new ValueFrame() ] ),
-				paramFrames = new Param( "Frames",[ new ValueFrame() ] ),
+				paramCount = new Param( "Count",[ new ValueFloat() ] ),
+				paramFrames = new Param( "Frames",[ new ValueFloat() ] ),
 				paramSize = new Param( "Size",[ new ValueFloat( 1 ), new ValueFloat( 1 ) ] ),
 				paramLife = new Param( "Life",[ new ValueFloat( 1 ) ] ),
 				paramVelocityX = new Param( "VelocityX",[ new ValueFloat(), new ValueFloat() ] ),

@@ -28,6 +28,8 @@ class Effect
                 if ( s == null ) 
                     return null;
                 e = EffectSymbol.create( s );
+			case "particles":            
+                e = new EffectParticleEmitter();
             default:
         }
 		e.id = id;

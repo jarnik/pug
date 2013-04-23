@@ -64,12 +64,14 @@ class Render extends Sprite
 	public var effect:Effect;
 	public var player:Player;
 	public var renderUpdatesEnabled:Bool;
+	public var frameCount:Int;
 	
 	public function new( effect:Effect ) 
 	{
 		super();
 		renderUpdatesEnabled = true;
 		this.effect = effect;
+		frameCount = 1;
 	}
 	
 	public function render( frame:Int, applyTransforms:Bool = true ):Void {
@@ -79,7 +81,9 @@ class Render extends Sprite
 		}
 	}
 	
-	
+	public function getFrameCount():Int {
+		return frameCount;
+	}
 	
 	public function alignTo( d:DisplayObject ):Void {
 		var p:Point = new Point(0, 0);		
