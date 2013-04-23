@@ -6,6 +6,7 @@ import nme.geom.Rectangle;
 import pug.model.Library;
 import pug.model.effect.Effect;
 import pug.model.symbol.Symbol;
+import pug.model.effect.EffectParticleEmitter;
 
 /**
  * ...
@@ -19,18 +20,38 @@ class RenderParticles extends Render
     private var particles:Array<Particle>;
     private var states:Hash<Array<ParticleState>>;
     private var range:Rectangle;
+    private var hash:String;
 
 	public function new( effect:Effect ) {
 		super( effect );
         
         particleContainer = this;
-        init();
 	}
 
     private function init():Void {
-        var particleCount:Int = 5;
+
+        hash = cast( effect, EffectParticleEmitter ).hash;
+
+        if ( particles != null )
+            for ( p in particles )
+                particleContainer.removeChild( p.skin );            
+
         particles = [];
-        var s:Symbol = Library.lib.get("marker");        
+
+        var template:Array<Dynamic> = cast( effect, EffectParticleEmitter ).gizmoParticles.paramTemplate.getValues( 0 );
+        var symbolName:String = template[ 0 ];
+        var stateName:String = template[ 1 ];
+        
+        var s:Symbol = Library.lib.get( symbolName );        
+        if ( s == null )
+            return;
+        
+        var paramSize:Array<Dynamic> = cast( effect, EffectParticleEmitter ).gizmoParticles.paramSize.getValues( 0 );        
+        range.width = paramSize[ 0 ];
+        range.height = paramSize[ 1 ];
+        range.x = -range.width / 2;
+        range.y = -range.height / 2;
+        var particleCount:Int = cast( effect, EffectParticleEmitter ).gizmoParticles.paramCount.getValues( 0 )[ 0 ];
         var r:Render;
         var p:Particle;
         for ( i in 0...particleCount ) {
@@ -38,6 +59,9 @@ class RenderParticles extends Render
             particleContainer.addChild( r );
             p = new Particle();
             p.skin = r;
+            if ( Std.is( r, RenderGroupStates ) )
+                cast( r, RenderGroupStates ).switchState( stateName );
+
             r.visible = false;
             particles.push( p );
         }
@@ -49,6 +73,9 @@ class RenderParticles extends Render
 
     override public function render( frame:Int, applyTransforms:Bool = true ):Void {
         super.render( frame, applyTransforms );
+
+        if ( hash != cast( effect, EffectParticleEmitter ).hash )
+            init();
 
         if ( !states.exists( Std.string( frame ) ) ) {
             computeState( frame );
@@ -68,8 +95,14 @@ class RenderParticles extends Render
         var a:Float;
         var l:Float = 3;//speed;                                                        
         var firstState:Array<ParticleState> = null;
+        var paramVelocityX:Array<Dynamic> = null;        
+        var paramVelocityY:Array<Dynamic> = null;        
         if ( frame != 0 )
             firstState = states.get( "0" );
+        else {
+            paramVelocityX = cast( effect, EffectParticleEmitter ).gizmoParticles.paramVelocityX.getValues( 0 );
+            paramVelocityY = cast( effect, EffectParticleEmitter ).gizmoParticles.paramVelocityY.getValues( 0 );
+        }
 
         for ( i in 0...particles.length ) {
             s = {
@@ -81,9 +114,8 @@ class RenderParticles extends Render
             p = particles[ i ];
 
             if ( frame == 0 ) {
-                a = Math.random()*Math.PI*2;
-                s.velocity.x = Math.sin(a)*l;
-                s.velocity.y = -Math.cos(a)*l;
+                s.velocity.x = paramVelocityX[ 0 ] + Math.random() * ( paramVelocityX[1] - paramVelocityX[0] );
+                s.velocity.y = paramVelocityY[ 0 ] + Math.random() * ( paramVelocityY[1] - paramVelocityY[0] );
                 s.position.x = range.left + range.width*Math.random();
                 s.position.y = range.top + range.height*Math.random();           
             } else {

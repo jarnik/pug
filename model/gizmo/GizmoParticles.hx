@@ -12,6 +12,7 @@ class GizmoParticles extends Gizmo
 {
 	public var paramTemplate:Param; // symbol name + state name
 	public var paramFrames:Param; // 0 means particle frame is set randomly at start
+	public var paramCount:Param; // 0 means particle frame is set randomly at start
 	public var paramSize:Param;
 	public var paramLife:Param;
 	public var paramVelocityX:Param;
@@ -23,6 +24,7 @@ class GizmoParticles extends Gizmo
 			"Particles",
 			[
 				paramTemplate = new Param( "Template",[ new ValueString(), new ValueString() ] ),
+				paramCount = new Param( "Count",[ new ValueFrame() ] ),
 				paramFrames = new Param( "Frames",[ new ValueFrame() ] ),
 				paramSize = new Param( "Size",[ new ValueFloat( 1 ), new ValueFloat( 1 ) ] ),
 				paramLife = new Param( "Life",[ new ValueFloat( 1 ) ] ),
