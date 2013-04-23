@@ -17,17 +17,17 @@ class RenderParticles extends Render
 	public var attractor:Point;
 
     private var particles:Array<Particle>;
-    private var timer:Float;
-    private var emitTimer:Float;
-    private var next:Int;
-    private var life:Float;
+    private var states:Hash<Array<ParticleState>>;
     private var range:Rectangle;
 
 	public function new( effect:Effect ) {
 		super( effect );
         
         particleContainer = this;
+        init();
+	}
 
+    private function init():Void {
         var particleCount:Int = 5;
         particles = [];
         var s:Symbol = Library.lib.get("marker");        
@@ -41,92 +41,86 @@ class RenderParticles extends Render
             r.visible = false;
             particles.push( p );
         }
-        next = 0;
-        life = 4;
         range = new Rectangle(0,0,30,30);
 
-        timer = life;
-        emitTimer = 0;
-        for ( i in 0...particles.length )
-            emit();
-	}
+        states = new Hash<Array<ParticleState>>();
+        computeState( 0 );
+    }
 
     override public function render( frame:Int, applyTransforms:Bool = true ):Void {
         super.render( frame, applyTransforms );
-        updateEmitter();
-    }
 
-    private function updateEmitter():Void {
-        var elapsed:Float = 1;
-        var p:Particle;
-        if ( timer >= 0 || emitTimer > 0 ) {
-            timer -= elapsed;
+        if ( !states.exists( Std.string( frame ) ) ) {
+            computeState( frame );
+        }
+        var state:Array<ParticleState> = states.get( Std.string( frame ) );
 
-            if ( timer <= 0 && emitTimer > 0 ) {
-                timer = emitTimer;
-                emit();
-            }
-
-            for ( i in 0...particles.length ) {
-                p = particles[i];
-                /*
-                if ( target != null ) {
-                    var ratio:Float = Math.sqrt(timer/life);
-                    p.x = p.x * (ratio) + target.x * (1 - ratio);
-                    p.y = p.y * (ratio) + target.y * (1 - ratio);
-                }*/
-                p.update( elapsed );
-
-            }
+        for ( i in 0...state.length ) {
+            particles[ i ].apply( state[ i ] );
         }
     }
 
-    private function emit():Void {
+    private function computeState( frame:Int ):Void {        
+        var state:Array<ParticleState> = [];
+
+        var s:ParticleState;
         var p:Particle;
         var a:Float;
-        var l:Float = 3;//speed;
-        a = Math.random()*Math.PI*2;
-        p = particles[ next ];
-        p.velocity.x = Math.sin(a)*l;
-        p.velocity.y = -Math.cos(a)*l;
-        p.skin.x = range.left + range.width*Math.random();
-        p.skin.y = range.top + range.height*Math.random();
-        p.skin.visible = true;
-        p.emit( life );
-        next++;
-        if ( next >= particles.length )
-            next = 0;
-        visible = true;
+        var l:Float = 3;//speed;                                                        
+        var firstState:Array<ParticleState> = null;
+        if ( frame != 0 )
+            firstState = states.get( "0" );
+
+        for ( i in 0...particles.length ) {
+            s = {
+                position: new Point(),
+                velocity: new Point(),
+                visible: false,
+                life: 0
+            }
+            p = particles[ i ];
+
+            if ( frame == 0 ) {
+                a = Math.random()*Math.PI*2;
+                s.velocity.x = Math.sin(a)*l;
+                s.velocity.y = -Math.cos(a)*l;
+                s.position.x = range.left + range.width*Math.random();
+                s.position.y = range.top + range.height*Math.random();           
+            } else {
+                s.position.x =  firstState[ i ].position.x + firstState[ i ].velocity.x * frame;
+                s.position.y =  firstState[ i ].position.y + firstState[ i ].velocity.y * frame;
+                s.velocity.x =  firstState[ i ].velocity.x;
+                s.velocity.y =  firstState[ i ].velocity.y;
+            }
+
+            s.visible = true;
+            state.push( s );
+        }
+
+        states.set( Std.string( frame ), state );
     }
 	
 }
 
+typedef ParticleState = {
+    var position:Point;
+    var velocity:Point;
+    var visible:Bool;
+    var life:Float;
+}
+
 class Particle
 {
-    public var velocity:Point;
-    private var life:Float;
     public var skin:DisplayObject;
 
     public function new() 
     {
-        velocity = new Point();
     }
-
-    public function emit( life:Float ):Void {
-        this.life = life;
-        skin.alpha = 1;
-        skin.visible = true;
-    }
-
-    public function update( elapsed:Float ):Void {
-        if ( life >= 0 ) {
-            if ( life < 0.5 )
-                skin.alpha = life / 0.5;
-            life -= elapsed;
-        } else
-            skin.visible = false;
-        skin.x += velocity.x * elapsed;
-        skin.y += velocity.y * elapsed;
+    
+    public function apply( state:ParticleState ) {
+        skin.x = state.position.x;
+        skin.y = state.position.y;
+        skin.visible = state.visible;
     }
 
 }
