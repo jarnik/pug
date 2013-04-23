@@ -47,6 +47,7 @@ class RenderParticles extends Render
             return;
         
         var paramSize:Array<Dynamic> = cast( effect, EffectParticleEmitter ).gizmoParticles.paramSize.getValues( 0 );        
+		range = new Rectangle();
         range.width = paramSize[ 0 ];
         range.height = paramSize[ 1 ];
         range.x = -range.width / 2;
@@ -65,7 +66,6 @@ class RenderParticles extends Render
             r.visible = false;
             particles.push( p );
         }
-        range = new Rectangle(0,0,30,30);
 
         states = new Hash<Array<ParticleState>>();
         computeState( 0 );
@@ -76,6 +76,9 @@ class RenderParticles extends Render
 
         if ( hash != cast( effect, EffectParticleEmitter ).hash )
             init();
+			
+		if ( states == null )
+			return;
 
         if ( !states.exists( Std.string( frame ) ) ) {
             computeState( frame );
