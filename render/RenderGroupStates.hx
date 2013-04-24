@@ -6,8 +6,7 @@ import pug.model.symbol.SymbolLayerState;
 
 typedef CACHED_STATE = {
 	cachedInstances:Hash<Render>,
-	group:IEffectGroup,
-	frameCount:Int
+	group:IEffectGroup
 }
 
 /**
@@ -30,15 +29,14 @@ class RenderGroupStates extends RenderGroup
 	public function switchState( newState:String ):Void {
 		cachedStates.set( currentState, { 
 			cachedInstances: this.cachedInstances,
-			group: this.group,
-			frameCount: this.frameCount
+			group: this.group
 		} );
 		
 		var cached:CACHED_STATE = cachedStates.get( newState );
 		if ( cached != null ) {
 			cachedInstances = cached.cachedInstances;
 			group = cached.group;
-			frameCount = cached.frameCount;
+			frameCount = group.frameCount;
 			currentState = newState;
 		} else {
 			var state:SymbolLayerState = cast( cast( effect, EffectSymbolLayer ).symbol, SymbolLayer ).states.get( newState );

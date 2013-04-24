@@ -13,6 +13,8 @@ class SymbolLayerState implements IEffectGroup
 	 public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):SymbolLayerState {
         var id:String = xml.get("id");
         var s:SymbolLayerState = new SymbolLayerState( id );
+        if ( xml.get("frames") != null )
+            s.frameCount = Std.parseInt( xml.get("frames") );
 		
 		var e:Effect;
         for ( x in xml.elements() ) {
@@ -27,6 +29,7 @@ class SymbolLayerState implements IEffectGroup
     }
 	
 	public var children:Array<Effect>;
+    public var frameCount:Int;
 	public var parentSymbol:SymbolLayer;
 	public var parent:IEffectGroup;
 	public var name:String;
@@ -34,6 +37,7 @@ class SymbolLayerState implements IEffectGroup
 	public function new( name:String ) {
 		children = [];
 		this.name = name;
+        frameCount = 1;
 	}
 	
 	public function addChild( e:Effect ):Void {        
@@ -51,6 +55,7 @@ class SymbolLayerState implements IEffectGroup
 	public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		var xml:Xml = Xml.createElement("state");
 		xml.set( "id", name );
+		xml.set( "frames", Std.string( frameCount ) );
         var child_export:EXPORT_PUG;
         for ( c in children ) {
             child_export = c.export( export );

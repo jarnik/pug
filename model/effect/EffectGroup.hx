@@ -11,6 +11,9 @@ class EffectGroup extends Effect, implements IEffectGroup
     public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):EffectGroup {
         var g:EffectGroup = new EffectGroup();
         var e:Effect = null;
+        if ( xml.get("frames") != null )
+            g.frameCount = Std.parseInt( xml.get("frames") );
+
         for ( x in xml.elements() ) {
             e = Effect.parse( x, l, libData );
             if ( e == null ) 
@@ -21,11 +24,13 @@ class EffectGroup extends Effect, implements IEffectGroup
     }
 
 	public var children:Array<Effect>;
+    public var frameCount:Int;
 
 	public function new() 
 	{
 		super( [] );
         id = "group"+Math.floor(Math.random()*1000);
+        frameCount = 1;
 		children = [];
 	}
 
@@ -44,7 +49,8 @@ class EffectGroup extends Effect, implements IEffectGroup
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		export = super.export( export );
         export.xml.nodeName = "group";
-		var xml:Xml = Xml.createElement("children");
+        export.xml.set("frames",Std.string(frameCount));
+		var xml:Xml = Xml.createElement("children");        
         var child_export:EXPORT_PUG = { xml:null, files: export.files };
         for ( e in children ) {
             child_export = e.export( child_export );
