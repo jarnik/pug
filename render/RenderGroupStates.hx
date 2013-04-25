@@ -51,6 +51,7 @@ class RenderGroupStates extends RenderGroup
 		var state:String = cast( effect, EffectSymbolLayer ).gizmoAttributes.params[ 3 ].getValues( frame )[ 0 ];
 		if ( currentState != state && applyTransforms )
 			switchState( state );
+		frameCount = group.frameCount;
 		super.render( frame, applyTransforms );
 	}
 	
