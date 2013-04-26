@@ -97,16 +97,19 @@ class RenderParticles extends Render
         var s:ParticleState;
         var p:Particle;
         var a:Float;
-        var l:Float = 3;//speed;                                                        
         var firstState:Array<ParticleState> = null;
         var paramVelocityX:Array<Dynamic> = null;        
         var paramVelocityY:Array<Dynamic> = null;        
+        var paramFadeout:Float = 0;
+        var paramLife:Float = 1;
 		var randomFrames:Bool = false;
-        if ( frame != 0 )
+        if ( frame != 0 ) {
             firstState = states.get( "0" );
-        else {
+			paramFadeout = cast( effect, EffectParticleEmitter ).gizmoParticles.paramFadeout.getValues( 0 )[ 0 ];
+		} else {
             paramVelocityX = cast( effect, EffectParticleEmitter ).gizmoParticles.paramVelocityX.getValues( 0 );
             paramVelocityY = cast( effect, EffectParticleEmitter ).gizmoParticles.paramVelocityY.getValues( 0 );
+			paramLife = cast( effect, EffectParticleEmitter ).gizmoParticles.paramLife.getValues( 0 )[ 0 ];
         }
 		randomFrames = (cast( effect, EffectParticleEmitter ).gizmoParticles.paramFrames.getValues( 0 )[0] == 1);
 
@@ -115,6 +118,7 @@ class RenderParticles extends Render
                 position: new Point(),
                 velocity: new Point(),
                 visible: false,
+                alpha: 1,
                 life: 0,
                 age: 0,
                 frame: 0
@@ -127,7 +131,8 @@ class RenderParticles extends Render
                 s.position.x = range.left + range.width*Math.random();
                 s.position.y = range.top + range.height * Math.random();
 				if ( randomFrames && Std.is( p.skin, Render ) )
-					s.frame = Math.floor( Math.random() * cast( p.skin, Render ).getFrameCount() );				
+					s.frame = Math.floor( Math.random() * cast( p.skin, Render ).getFrameCount() );
+				s.life = paramLife;
             } else {
                 s.position.x =  firstState[ i ].position.x + firstState[ i ].velocity.x * frame;
                 s.position.y =  firstState[ i ].position.y + firstState[ i ].velocity.y * frame;
@@ -138,6 +143,8 @@ class RenderParticles extends Render
 				else
 					s.frame = firstState[ i ].frame;
 				s.age = frame;
+				if ( s.age > firstState[ i ].life - paramFadeout )
+					s.alpha = (firstState[ i ].life - s.age) / paramFadeout;
             }
 
             s.visible = true;
@@ -153,6 +160,7 @@ typedef ParticleState = {
     var position:Point;
     var velocity:Point;
     var visible:Bool;
+    var alpha:Float;
     var life:Float;
     var age:Float;
     var frame:Int;
@@ -171,6 +179,7 @@ class Particle
         skin.x = state.position.x;
         skin.y = state.position.y;
         skin.visible = state.visible;
+        skin.alpha = state.alpha;
 		if ( Std.is( skin, Render ) && lastFrame != state.frame ) {
 			lastFrame = state.frame;
 			cast( skin, Render ).render( state.frame, false );
