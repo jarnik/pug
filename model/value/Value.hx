@@ -6,7 +6,6 @@ package pug.model.value;
  */
 class Value
 {
-
 	public function new() 
 	{
 		
@@ -22,5 +21,9 @@ class Value
     public function parse( s:String ):Void {
         setValue( Std.parseFloat( s ) );
     }
+	
+	public function mix( v:Value, ratio:Float ):Dynamic {
+		return 0;
+	}
 	
 }

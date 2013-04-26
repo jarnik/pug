@@ -25,4 +25,8 @@ class ValueFloat extends Value
 	override public function parse( s:String ):Void {
         float = Std.parseFloat( s );
     }
+	
+	override public function mix( v:Value, ratio:Float ):Dynamic {
+		return float * (1 - ratio) + cast( v, ValueFloat ).float * (ratio);
+	}
 }

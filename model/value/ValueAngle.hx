@@ -21,4 +21,8 @@ class ValueAngle extends Value
 	override public function getValue():Dynamic {
         return degrees;
     }
+	
+	override public function mix( v:Value, ratio:Float ):Dynamic {
+		return degrees * (1 - ratio) + cast( v, ValueAngle ).degrees * (ratio);
+	}
 }

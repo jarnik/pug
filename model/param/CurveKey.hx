@@ -6,6 +6,7 @@ import pug.model.value.ValueFrame;
 import pug.model.value.ValueAngle;
 import pug.model.value.ValueScale;
 import pug.model.value.ValueString;
+import pug.model.value.ValueColor;
 import pug.model.Library;
 
 enum KEY_TYPE {
@@ -76,18 +77,12 @@ class CurveKey
 				ratio = 0;
 			
 			switch( Type.getClass( v1 ) ) {
-				case ValueFloat:
-					v = cast( v1, ValueFloat ).float * (1 - ratio) + cast( v2, ValueFloat ).float * (ratio);
-				case ValueAngle:
-					v = cast( v1, ValueAngle ).degrees * (1 - ratio) + cast( v2, ValueAngle ).degrees * (ratio);
-				case ValueScale:
-					v = cast( v1, ValueScale ).scale*(1-ratio) + cast( v2, ValueScale ).scale*(ratio);
-				case ValueString:
-					v = cast( v1, ValueString ).string;
                 case ValueFrame:
-					//v = Math.floor( cast( v1, ValueFrame ).frame * (1 - ratio) + cast( v2, ValueFrame ).frame * (ratio) );
-					v = cast( v1, ValueFrame ).frame + Math.floor( ratio*( k.frame - frame ) );
+					v = cast( v1, ValueFrame ).frame + Math.floor( ratio * ( k.frame - frame ) );
+				default:
+					v = v1.mix( v2, ratio );
 			}
+			
 			out.push( v );
 		}
 		return out;

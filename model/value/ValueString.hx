@@ -25,4 +25,8 @@ class ValueString extends Value
     override public function parse( s:String ):Void {
         setValue( s );
     }
+	
+	override public function mix( v:Value, ratio:Float ):Dynamic {
+		return string;
+	}
 }

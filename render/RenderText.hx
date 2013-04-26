@@ -30,7 +30,7 @@ class RenderText extends Render
 		var size:Array<Dynamic> = et.gizmoText.paramSize.getValues( frame );		
 		var text:String = et.gizmoText.paramText.getValues( frame )[ 0 ];
 		var alignment:String = et.gizmoText.paramAlignment.getValues( frame )[ 0 ];
-		var color:Int = et.gizmoText.paramColor.getValues( frame )[ 0 ];
+		var color:Int = Std.parseInt( et.gizmoText.paramColor.getValues( frame )[ 0 ] );
 		format.font = font[ 0 ];
 		format.size = font[ 1 ];
 		switch ( alignment ) {
