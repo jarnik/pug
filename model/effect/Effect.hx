@@ -30,6 +30,8 @@ class Effect
                 e = EffectSymbol.create( s );
 			case "particles":            
                 e = new EffectParticleEmitter();
+			case "text":            
+                e = new EffectText();
             default:
         }
 		e.id = id;

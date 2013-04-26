@@ -1,17 +1,21 @@
 package pug.model.effect;
 
-class Text extends Effect
+import pug.model.gizmo.GizmoText;
+import pug.model.Library;
+
+class EffectText extends Effect
 {
-    private var tf:TextField;
-    private var format:TextFormat;
+    public var gizmoText:GizmoText;
 
 	public function new () 
 	{
 		super( [] );
-		this.id = id;
-		
-        tf = new TextField();
-        format = new TextFormat();
+		gizmos.push( gizmoText = new GizmoText() );
 	}
 
+	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
+		export = super.export( export );
+        export.xml.nodeName = "text";
+		return export;
+	}
 }
