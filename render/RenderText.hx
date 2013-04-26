@@ -5,6 +5,8 @@ import nme.text.TextFormat;
 import nme.text.TextFormatAlign;
 import pug.model.effect.Effect;
 import pug.model.effect.EffectText;
+import nme.Assets;
+import nme.text.Font;
 
 /**
  * ...
@@ -20,7 +22,12 @@ class RenderText extends Render
 		tf = new TextField();
 		format = new TextFormat();
 		tf.defaultTextFormat = format;
+		tf.embedFonts = true;
+		tf.selectable = false;
+        tf.mouseEnabled = false; 
+        tf.wordWrap = false; 
 		addChild( tf );
+		format.font = Assets.getFont("assets/fonts/nokiafc22.ttf").fontName;
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
