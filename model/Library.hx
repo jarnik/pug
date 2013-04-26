@@ -106,6 +106,10 @@ class Library
 		onLibLoaded.dispatch();
     }
 	
+	public function removeSymbol( s:Symbol ):Void {
+		symbols.remove( s );
+	}
+	
 	public function importLibDataPug( input:Input ):Void {
 		loaderPug.importLibDataPug( input );
 	}
