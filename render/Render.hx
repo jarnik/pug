@@ -39,9 +39,11 @@ class Render extends Sprite
 			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
 			//if ( state != null )
 			//	cast( r, pug.render.RenderGroupStates ).switchState( state );
+			r.render( 0, false );
 			return r;
         } else if ( Std.is( s, SymbolImage ) ) {
 			r = new RenderImage( null, cast( s, SymbolImage ) );
+			r.render( 0, false );
 			return r;
 		}
 		return null;
