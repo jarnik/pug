@@ -1,8 +1,11 @@
 package pug.render;
 
+import nme.display.BitmapData;
 import pug.model.effect.Effect;
 import pug.model.symbol.SymbolImage;
 import nme.display.Bitmap;
+
+import nme.Assets;
 
 /**
  * ...
@@ -24,15 +27,12 @@ class RenderImage extends Render
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
-
 		var imageFrame:Int = frame;
 		if ( effect != null )
 			imageFrame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
-		imageFrame = imageFrame % image.frames.length;
-		
+		imageFrame = Std.int( imageFrame % image.frames.length );
 		bitmap.bitmapData = image.frames[ imageFrame ];
 		super.render( frame, applyTransforms );
-		
 	}
 	
 	override public function hideContents():Void {
