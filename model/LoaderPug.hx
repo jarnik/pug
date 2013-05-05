@@ -45,9 +45,8 @@ class LoaderPug
 	
 	public function importLibDataPug( input:Input ):Void {
         this.input = input;
-		//trace( "gonna read data of " + input );
 		#if neko
-			var fp:FileInput = cast( input, FileInput );
+			var fp:Input = input;
 			var zipFiles:List<ZipEntry> = neko.zip.Reader.readZip( fp );
 			fp.close();
 			

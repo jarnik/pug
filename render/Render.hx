@@ -22,6 +22,7 @@ import pug.model.symbol.Symbol;
 import pug.model.value.ValueAngle;
 import pug.model.value.ValueScale;
 import pug.model.value.ValueString;
+import nme.events.MouseEvent;
 
 /**
  * ...
@@ -38,9 +39,11 @@ class Render extends Sprite
 			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
 			//if ( state != null )
 			//	cast( r, pug.render.RenderGroupStates ).switchState( state );
+			r.render( 0, false );
 			return r;
         } else if ( Std.is( s, SymbolImage ) ) {
 			r = new RenderImage( null, cast( s, SymbolImage ) );
+			r.render( 0, false );
 			return r;
 		}
 		return null;
@@ -105,11 +108,12 @@ class Render extends Sprite
 		}
 	}
 	
-	public function play( loop:Bool = false, fps:Float = 30 ):Void {
+	public function play( loop:Bool = false, fps:Float = 30, state:String = null, onFinishedCallback:Dynamic = null ):Void {
 		if ( player == null ) {
 			player = new Player();
 			player.onSetFrame.bind( onSetFrame );
 		}
+		onSetFrame( 0 );
 		player.play( loop, fps );
 	}
 	
@@ -137,4 +141,17 @@ class Render extends Sprite
 		var alpha:Array<Dynamic> = g.paramAlpha.getValues( frame );
         this.alpha = alpha[ 0 ];
     }
+	
+	public function onClick( _callback:Dynamic = null ):Void {
+        buttonMode = true;
+        mouseChildren = false;
+        addEventListener( MouseEvent.CLICK, _callback );
+    }
+
+    public function onEvents( events:Array<String>, _callback:Dynamic = null ):Void {
+        buttonMode = true;
+        mouseChildren = false;
+        for ( e in events )
+            addEventListener( e, _callback );
+    } 
 }

@@ -47,6 +47,13 @@ class RenderGroupStates extends RenderGroup
 		}
 	}
 	
+	override public function play( loop:Bool = false, fps:Float = 30, state:String = null, onFinishedCallback:Dynamic = null ):Void {
+		if ( state != null ) {
+			switchState( state );
+		}
+		super.play( loop, fps, state, onFinishedCallback );
+	}
+	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
 		var state:String = cast( effect, EffectSymbolLayer ).gizmoAttributes.params[ 3 ].getValues( frame )[ 0 ];
 		if ( currentState != state && applyTransforms )
