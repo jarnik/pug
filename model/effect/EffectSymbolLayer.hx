@@ -20,4 +20,7 @@ class EffectSymbolLayer extends EffectSymbol
 		);
 	}
 	
+	override public function clone():Effect {
+		return new EffectSymbolLayer( symbol );
+	}
 }

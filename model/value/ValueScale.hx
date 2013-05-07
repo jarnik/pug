@@ -25,4 +25,8 @@ class ValueScale extends Value
 	override public function mix( v:Value, ratio:Float ):Dynamic {
 		return scale * (1 - ratio) + cast( v, ValueScale ).scale * (ratio);
 	}
+	
+	override public function clone():Value {
+		return new ValueScale( scale );
+	}
 }

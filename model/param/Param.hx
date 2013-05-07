@@ -190,4 +190,14 @@ class Param
 			}
 		}
     }
+	
+	public function copy( p:Param ):Void {
+		name = p.name;
+		values = [];
+		keys = [];
+		for ( v in p.values )
+			values.push( v.clone() );
+		for ( k in p.keys )
+			keys.push( k.clone() );
+	}
 }

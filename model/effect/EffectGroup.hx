@@ -66,4 +66,17 @@ class EffectGroup extends Effect, implements IEffectGroup
 		for ( i in 0...children.length )
 			children[ i ].level = i;
 	}
+	
+	override public function clone():Effect {
+		return new EffectGroup();
+	}
+	
+	override public function copy( e:Effect ):Void {
+		super.copy( e ); 
+		cast( e, EffectGroup ).frameCount = frameCount;
+		var childClone:Effect;
+		for ( c in cast( e, EffectGroup ).children ) {
+			addChild( Effect.createClone( c ) );
+		}
+	}
 }

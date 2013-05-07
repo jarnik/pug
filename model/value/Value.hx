@@ -26,4 +26,8 @@ class Value
 		return 0;
 	}
 	
+	public function clone():Value {
+		return new Value();
+	}
+	
 }

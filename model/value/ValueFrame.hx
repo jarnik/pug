@@ -25,4 +25,8 @@ class ValueFrame extends Value
 	override public function parse( s:String ):Void {
         frame = Std.parseInt( s );
     }
+	
+	override public function clone():Value {
+		return new ValueFrame( frame );
+	}
 }

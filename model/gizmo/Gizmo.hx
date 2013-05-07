@@ -39,4 +39,10 @@ class Gizmo
             }
         }
     }
+	
+	public function copy( g:Gizmo ):Void {
+		name = g.name;
+		for ( i in 0...params.length )
+			params[ i ].copy( g.params[ i ] );
+	}
 }

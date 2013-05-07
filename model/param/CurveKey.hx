@@ -88,4 +88,14 @@ class CurveKey
 		return out;
 	}
 	
+	public function clone():CurveKey {
+		var k:CurveKey = new CurveKey();
+		k.frame = frame;
+		for ( v in values )
+			k.values.push( v.clone() );
+		for ( t in keyTypes )
+			k.keyTypes.push( t );
+		return k;
+	}
+	
 }

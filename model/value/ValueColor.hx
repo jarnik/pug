@@ -40,4 +40,8 @@ class ValueColor extends Value
 		var b:Int = Math.round( b1*(1 - ratio) + b2*ratio );
 		return "0x"+StringTools.hex( r << 16 | g << 8 | b, 6 );
 	}
+	
+	override public function clone():Value {
+		return new ValueColor( color );
+	}
 }

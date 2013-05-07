@@ -12,7 +12,6 @@ import pug.model.param.Param;
 class GizmoTransform extends Gizmo
 {
 	public var paramPosition:Param;
-	//public var paramPivot:Param;
 	public var paramRotation:Param;
 	public var paramScale:Param;
 
@@ -22,7 +21,6 @@ class GizmoTransform extends Gizmo
 			"Transform",
 			[
 				paramPosition = new Param( "Position",[ new ValueFloat(), new ValueFloat() ] ),
-				//paramPivot = new Param( "Pivot",[ new ValueFloat(), new ValueFloat() ] ),
 				paramRotation = new Param( "Rotation",[ new ValueAngle() ] ),
 				paramScale = new Param( "Scale",[ new ValueScale(), new ValueScale() ] )
 			]

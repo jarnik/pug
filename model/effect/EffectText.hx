@@ -18,4 +18,8 @@ class EffectText extends Effect
         export.xml.nodeName = "text";
 		return export;
 	}
+	
+	override public function clone():Effect {
+		return new EffectText();
+	}
 }

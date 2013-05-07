@@ -51,6 +51,12 @@ class Effect
 
         return e;
     }
+	
+	public static function createClone( e:Effect ):Effect {
+		var c:Effect = e.clone();
+		c.copy( e );
+		return c;
+	}
 
     public var parent:IEffectGroup;
 	public var gizmos:Array<Gizmo>;
@@ -60,8 +66,6 @@ class Effect
 	public var level:Int;
 	public var id:String;
 	
-	//public var gizmoCanvas:GizmoCanvas;
-	//public var gizmoAlignment:GizmoAlignment;
 	public var gizmoTransform:GizmoTransform;
 	public var gizmoAttributes:GizmoAttributes;
 	
@@ -77,8 +81,6 @@ class Effect
 		
 		gizmos.push( gizmoTransform = new GizmoTransform() );
 		gizmos.push( gizmoAttributes = new GizmoAttributes() );
-		//gizmos.push( gizmoCanvas = new GizmoCanvas() );
-		//gizmos.push( gizmoAlignment = new GizmoAlignment() );
 	}
 	
     public function export( export:EXPORT_PUG ):EXPORT_PUG {
@@ -94,5 +96,19 @@ class Effect
         }
         export.xml = xml;        
 		return export;
+	}
+	
+	public function clone():Effect {
+		return new Effect( [] );
+	}
+	
+	public function copy( e:Effect ):Void {
+		parent = e.parent;
+		frameStart = e.frameStart;
+		frameLength = e.frameLength;
+		level = e.level+1;
+		id = e.id + Std.string( Math.floor( Math.random() * 10 ) );
+		for ( i in 0...gizmos.length )
+			gizmos[i].copy( e.gizmos[ i ] ); 
 	}
 }

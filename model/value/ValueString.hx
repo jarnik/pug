@@ -29,4 +29,8 @@ class ValueString extends Value
 	override public function mix( v:Value, ratio:Float ):Dynamic {
 		return string;
 	}
+	
+	override public function clone():Value {
+		return new ValueString( string );
+	}
 }

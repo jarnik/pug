@@ -29,4 +29,8 @@ class EffectParticleEmitter extends Effect
         export.xml.nodeName = "particles";
 		return export;
 	}
+	
+	override public function clone():Effect {
+		return new EffectParticleEmitter();
+	}
 }

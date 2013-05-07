@@ -31,4 +31,8 @@ class EffectSymbol extends Effect
         export.xml.nodeName = "symbol";
 		return export;
 	}
+	
+	override public function clone():Effect {
+		return new EffectSymbol( symbol );
+	}
 }

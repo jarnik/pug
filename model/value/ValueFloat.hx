@@ -29,4 +29,8 @@ class ValueFloat extends Value
 	override public function mix( v:Value, ratio:Float ):Dynamic {
 		return float * (1 - ratio) + cast( v, ValueFloat ).float * (ratio);
 	}
+	
+	override public function clone():Value {
+		return new ValueFloat( float );
+	}
 }
