@@ -16,6 +16,7 @@ class RenderText extends Render
 {
 	private var tf:TextField;
 	private var format:TextFormat;
+	private var fixedLabel:String;
 
 	public function new( effect:Effect ) {
 		super( effect );
@@ -28,6 +29,12 @@ class RenderText extends Render
         tf.wordWrap = false; 
 		addChild( tf );
 		format.font = Assets.getFont("assets/fonts/nokiafc22.ttf").fontName;
+	}
+	
+	override public function setLabel( text:String ):Void {
+		fixedLabel = text;
+		tf.text = text;
+		tf.setTextFormat( format );
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
@@ -48,7 +55,7 @@ class RenderText extends Render
 		format.color = color;		
 		tf.width = size[ 0 ];
 		tf.height = size[ 1 ];
-		if ( tf.text != text )
+		if ( tf.text != text && fixedLabel == null )
 			tf.text = text;
 		tf.setTextFormat( format );
 	}

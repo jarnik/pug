@@ -1,6 +1,7 @@
 package pug.render;
 import flash.display.DisplayObject;
 import nme.geom.Point;
+import nme.Lib;
 import pug.model.effect.Effect;
 import pug.model.effect.EffectSymbol;
 import pug.model.effect.EffectSymbolLayer;
@@ -8,6 +9,7 @@ import pug.model.effect.EffectGroup;
 import pug.model.effect.EffectParticleEmitter;
 import pug.model.effect.EffectText;
 import pug.model.effect.IEffectGroup;
+import pug.model.Library;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolLayer;
 import pug.model.symbol.SymbolLayerState;
@@ -37,8 +39,6 @@ class Render extends Sprite
         if ( Std.is( s, SymbolLayer ) ) {
 			r = new RenderGroupStates( new EffectSymbolLayer( s ) );
 			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
-			//if ( state != null )
-			//	cast( r, pug.render.RenderGroupStates ).switchState( state );
 			r.render( 0, false );
 			return r;
         } else if ( Std.is( s, SymbolImage ) ) {
@@ -47,6 +47,15 @@ class Render extends Sprite
 			return r;
 		}
 		return null;
+	}
+	
+	public static function renderGroupStates( id:String, lib:Library = null, state:String = null ):RenderGroupStates {
+		if ( lib == null )
+			lib = Library.lib;
+		var r:RenderGroupStates = cast( renderSymbol( lib.get( id ) ), RenderGroupStates );
+		if ( state != null )
+			r.switchState( state );
+		return r;
 	}
 	
 	public static function create( e:Effect ):Render {
@@ -101,6 +110,8 @@ class Render extends Sprite
 	
 	public function hideContents():Void {
 	}
+	
+	public function setLabel( text:String ):Void {}
 	
 	public function update( timeElapsed:Float ):Void {
 		if ( player != null ) {
