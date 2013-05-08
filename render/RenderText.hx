@@ -26,7 +26,7 @@ class RenderText extends Render
 		tf.embedFonts = true;
 		tf.selectable = false;
         tf.mouseEnabled = false; 
-        tf.wordWrap = false; 
+        tf.wordWrap = true; 
 		addChild( tf );
 		format.font = Assets.getFont("assets/fonts/nokiafc22.ttf").fontName;
 	}
