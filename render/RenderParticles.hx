@@ -71,6 +71,10 @@ class RenderParticles extends Render
         states = new Hash<Array<ParticleState>>();
         computeState( 0 );
     }
+	
+	public function rehash():Void {
+		hash = "";
+	}
 
     override public function render( frame:Int, applyTransforms:Bool = true ):Void {
         super.render( frame, applyTransforms );
