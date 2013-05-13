@@ -18,6 +18,8 @@ class GizmoParticles extends Gizmo
 	public var paramLife:Param;
 	public var paramVelocityX:Param;
 	public var paramVelocityY:Param;
+	public var paramCycle:Param;
+	public var paramAcceleration:Param;
 
 	public function new() 
 	{
@@ -29,9 +31,11 @@ class GizmoParticles extends Gizmo
 				paramFrames = new Param( "Frames",[ new ValueFloat() ] ),
 				paramFadeout = new Param( "Fadeout",[ new ValueFloat() ] ),
 				paramSize = new Param( "Size",[ new ValueFloat( 1 ), new ValueFloat( 1 ) ] ),
-				paramLife = new Param( "Life",[ new ValueFloat( 1 ) ] ),
+				paramLife = new Param( "Life",[ new ValueFloat( 1 ) ] ),			
 				paramVelocityX = new Param( "VelocityX",[ new ValueFloat(), new ValueFloat() ] ),
-				paramVelocityY = new Param( "VelocityY",[ new ValueFloat(), new ValueFloat() ] )
+				paramVelocityY = new Param( "VelocityY", [ new ValueFloat(), new ValueFloat() ] ),
+				paramCycle = new Param( "Cycle",[ new ValueFloat( 0 ), new ValueFloat( 0 ) ] ),
+				paramAcceleration = new Param( "Acceleration",[ new ValueFloat( 0 ), new ValueFloat( 0 ) ] )
 			]
 		);
 	}
