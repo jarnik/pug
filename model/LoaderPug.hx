@@ -39,7 +39,7 @@ class LoaderPug
 	private function resetLoading():Void {
         filesToLoad = 0;
         filesLoaded = 0;
-		libData = { xml:null, images: new Hash<BitmapData>() };
+		libData = { xml:null, images: new Hash<BitmapData>(), svgs: new Hash<String>() };
         loadImagesLoaders = new Hash<Loader>();
     }
 	

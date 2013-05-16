@@ -20,7 +20,7 @@ import format.svg.RenderContext;
 
 import format.svg.SVGData;
 
-class ParserSVG2
+class ParserSVG
 {
     private static var data:SVGData;
 	
@@ -50,7 +50,7 @@ class ParserSVG2
                 if ( forcedSizeLevel > 0 ) {
                     forcedSize = new Rectangle( 0, 0, data.width, data.height );
                 }
-                g.updateExtent( forcedSize );
+                //g.updateExtent( forcedSize );
                 //g.alignment = align;
                 e = g;
             case DisplayPath( p ): 

@@ -50,8 +50,8 @@ class RenderShape extends Render
 	
 	public static function renderDisplayShape( n:DisplayShape ):DisplayObject {
         var s:Sprite = new Sprite();
-        //s.x = fixedSize.x;
-        //s.y = fixedSize.y;
+        s.x = n.fixedSize.x;
+        s.y = n.fixedSize.y;
         //trace("rendering shape at "+s.x+" "+s.y);
         var inPath:Path = n.path;
         var m:Matrix = inPath.matrix.clone();

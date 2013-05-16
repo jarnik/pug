@@ -26,10 +26,11 @@ class DisplayNode implements IDisplayNode
         //alpha = 1;
 	}
 
-/*    public function addChild( e:IElement ):Void {
+    public function addChild( e:IDisplayNode ):Void {
         children.push( e );
     }
-
+	
+/*  
     public function addChildAt( e:IElement, index:Int ):Void {
         children.insert( index, e );
     }

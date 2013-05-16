@@ -5,6 +5,7 @@ import format.gfx.GfxExtent;
 import format.svg.RenderContext;
 import nme.display.DisplayObject;
 import pug.model.faxe.DisplayNode;
+import pug.model.faxe.ParserSVG;
 
 enum ShapeSource {
 	ShapeLink( shape:SymbolShape, path:String );
@@ -24,7 +25,7 @@ class SymbolShape extends Symbol
 			case ShapeLink( shape, path ):
 			case ShapeFile( svg, name ):
 				// parse SVG, produce browsable hierarchy composed of Paths
-				// svgRoot = ParseSVG( svg );
+				svgRoot = cast( ParserSVG.parse( svg ), DisplayNode );
 		}
 	}
 	
