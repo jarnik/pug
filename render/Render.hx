@@ -33,16 +33,19 @@ import nme.events.MouseEvent;
 class Render extends Sprite
 {
 	public static function renderSymbol( s:Symbol ):Render {
-		var r:Render;
+		var r:Render = null;
 		var e:Render;
 		var f:Effect;
         if ( Std.is( s, SymbolLayer ) ) {
 			r = new RenderGroupStates( new EffectSymbolLayer( s ) );
 			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
-			r.render( 0, false );
-			return r;
         } else if ( Std.is( s, SymbolImage ) ) {
 			r = new RenderImage( null, cast( s, SymbolImage ) );
+		} else if ( Std.is( s, SymbolShape ) ) {
+			r = new RenderShape( null, cast( s, SymbolShape ) );
+		}
+		
+		if ( r != null ) {
 			r.render( 0, false );
 			return r;
 		}
@@ -64,6 +67,8 @@ class Render extends Sprite
 		} else if ( Std.is( e, EffectSymbol ) ) {
             if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolImage ) ) {
 				return new RenderImage( e, cast( cast( e, EffectSymbol ).symbol, SymbolImage ) );
+            } else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolShape ) ) {
+				return new RenderShape( e, cast( cast( e, EffectSymbol ).symbol, SymbolShape ) );
             } else
 				return null;
 		} else if( Std.is( e, EffectGroup ) ) {
