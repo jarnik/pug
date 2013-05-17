@@ -29,10 +29,29 @@ class SymbolShape extends Symbol
 		}
 	}
 	
-	public function fetchDisplayNode( path:String ):DisplayNode {
-		// TODO
-		return null;
-	}
+	public function fetchDisplayNode( path:String, source:DisplayNode = null ):DisplayNode {
+		if ( source == null )
+			source = getDisplayNode();
+		
+        var pathElements:Array<String> = path.split("."); 
+        //Debug.log("fetching kid "+pathElements[0]+"  ");
+
+        var g:DisplayNode;
+        for ( kid in source.children ) {
+            //Debug.log("matching kid "+kid.name);
+            if ( !Std.is( kid, DisplayNode ) )
+                continue;
+            g = cast( kid, DisplayNode );
+            if ( g.name == pathElements[0] ) {
+                if ( pathElements.length == 1 )
+                    return g;
+                else
+                    return fetchDisplayNode( path.substr( path.indexOf(".")+1 ), g );
+            }
+        }
+
+        return null;
+    }
 	
 	public function getDisplayNode():DisplayNode {
 		switch ( source ) {
