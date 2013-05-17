@@ -65,9 +65,12 @@ class Effect
 	public var frameLength:Int;
 	public var level:Int;
 	public var id:String;
+	public var renderable:Bool;
 	
 	public var gizmoTransform:GizmoTransform;
 	public var gizmoAttributes:GizmoAttributes;
+	
+	public var subElements:Array<EffectSubElement>;
 	
 	public function new( gizmos:Array<Gizmo> ) 
 	{
@@ -76,6 +79,9 @@ class Effect
 		frameStart = 0;
 		frameLength = 1;
 		level = 0;
+		
+		renderable = true;
+		subElements = [];
 
         id = "effect"+Math.floor(Math.random()*1000);
 		
@@ -110,5 +116,9 @@ class Effect
 		id = e.id + Std.string( Math.floor( Math.random() * 10 ) );
 		for ( i in 0...gizmos.length )
 			gizmos[i].copy( e.gizmos[ i ] ); 
+	}
+	
+	public function addSubElement( e:EffectSubElement ):Void {
+		subElements.push( e );
 	}
 }

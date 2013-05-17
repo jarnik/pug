@@ -33,6 +33,11 @@ class RenderShape extends Render
 		addChild( sprite );
 	}
 	
+	public override function render( frame:Int, applyTransforms:Bool = true ):Void {
+		super.render( frame, applyTransforms );
+		renderSubElements( frame );
+	}
+	
 	public static function renderDisplayNode( n:DisplayNode ):DisplayObject {
 		var s:Sprite = new Sprite();
 		s.x = n.fixedSize.x;
