@@ -86,8 +86,12 @@ class LoaderPug
                     loadImage( id, f.data );
                 case "xml":
                     libData.xml = Xml.parse( f.data.toString() );
+				case "svg":
+					libData.svgs.set( id, f.data.toString() );	
+					filesLoaded++;        
             }
         }
+		checkFilesLoaded();
     }
 	
 	private function bytesToBA( b:Bytes ):ByteArray {
@@ -124,7 +128,11 @@ class LoaderPug
                 break;
             }
         }
-        filesLoaded++;
+		filesLoaded++;
+        checkFilesLoaded();
+	}
+	
+	private function checkFilesLoaded():Void {
         if ( filesToLoad == filesLoaded ) {
             //trace("lib done with images " + libData.images );
 			//for ( k in libData.images.keys() ) 

@@ -15,6 +15,8 @@ class Symbol
                 return SymbolImage.parse( xml, l, libData );
             case "symbolLayer":
                 return SymbolLayer.parse( xml, l, libData );
+			case "symbolShape":
+                return SymbolShape.parse( xml, l, libData );
         }
         return null;
     }
