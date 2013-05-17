@@ -37,6 +37,17 @@ class RenderText extends Render
 		tf.setTextFormat( format );
 	}
 	
+	private function getPlatformFont( path:String ):String {
+		#if android
+			path = StringTools.replace( path, "/", "_" );
+			path = StringTools.replace( path, "-", "_" );
+			path = path.toLowerCase();
+			path += "_ttf";
+			return path;
+		#end
+		return path;
+	}
+	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
         super.render( frame, applyTransforms );
 		var et:EffectText = cast( effect, EffectText );
@@ -45,7 +56,7 @@ class RenderText extends Render
 		var text:String = et.gizmoText.paramText.getValues( frame )[ 0 ];
 		var alignment:String = et.gizmoText.paramAlignment.getValues( frame )[ 0 ];
 		var color:Int = Std.parseInt( et.gizmoText.paramColor.getValues( frame )[ 0 ] );
-		format.font = font[ 0 ];
+		format.font = getPlatformFont( font[ 0 ] );
 		format.size = font[ 1 ];
 		switch ( alignment ) {
 			case "left", "": format.align = TextFormatAlign.LEFT;
