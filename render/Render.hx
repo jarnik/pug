@@ -120,13 +120,14 @@ class Render extends Sprite
 	
 	public function renderSubElements( frame:Int ):Void {
 		var d:DisplayObject;
-		for ( e in effect.subElements ) {
-			d = fetchSubElement( e.path );
-			if ( d != null ) {
-				applyTransform( e.gizmoTransform, d, frame );
-				applyAttributes( e.gizmoAttributes, d, frame );
+		if ( effect != null )
+			for ( e in effect.subElements ) {
+				d = fetchSubElement( e.path );
+				if ( d != null ) {
+					applyTransform( e.gizmoTransform, d, frame );
+					applyAttributes( e.gizmoAttributes, d, frame );
+				}
 			}
-		}
 	}
 	
 	public function fetchSubElement( path:Array<Int> ):DisplayObject {

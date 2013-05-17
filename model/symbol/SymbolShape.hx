@@ -47,6 +47,11 @@ class SymbolShape extends Symbol
 		}
 	}
 	
+	public function updateSVG( svg:String ):Void {
+		source = ShapeFile( svg, id );
+		svgRoot = cast( ParserSVG.parse( svg ), DisplayNode );
+	}
+	
 	public function fetchDisplayNode( path:String, sourceNode:DisplayNode = null ):DisplayNode {
 		if ( sourceNode == null )
 			sourceNode = getDisplayNode();

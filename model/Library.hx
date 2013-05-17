@@ -133,8 +133,8 @@ class Library
 	public function importSVG( id:String, svg:String ):Void {
 		var duplicate:Symbol = get( id );
 		if ( duplicate != null ) {
-			//if ( Std.is( duplicate, SymbolShape ) )
-			//	cast( duplicate, SymbolShape ).updateBitmap( bmd );
+			if ( Std.is( duplicate, SymbolShape ) )
+				cast( duplicate, SymbolShape ).updateSVG( svg );
 		} else
 			symbols.push( new SymbolShape( id, ShapeFile( svg, id ) ) );
 	}
