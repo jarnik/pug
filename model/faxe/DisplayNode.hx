@@ -33,7 +33,7 @@ class DisplayNode implements IDisplayNode
 /*  
     public function addChildAt( e:IElement, index:Int ):Void {
         children.insert( index, e );
-    }
+    }*/
 
     public function updateExtent( forcedSize:Rectangle = null ):Void {
         if ( forcedSize != null ) {
@@ -57,7 +57,8 @@ class DisplayNode implements IDisplayNode
             }
         }
 
-        var g:Group;
+		/*
+        var g:DisplayNode;
         for ( kid in children ) {
             if ( Std.is( kid, DisplayNode )) {
                 g = cast( kid, DisplayNode );
@@ -68,11 +69,12 @@ class DisplayNode implements IDisplayNode
                 g.alignment.bottom = fixedSize.height - (g.fixedSize.y + g.fixedSize.height);
                 //trace("kid "+g.fixedSize+" aligns "+g.alignment);                  
             }
-        }
+        }*/
 
         //trace("group "+name+" extents "+fixedSize);
     }
 
+	/*
     public function fetch( path:String ):Group {
         var pathElements:Array<String> = path.split("."); 
         //Debug.log("fetching kid "+pathElements[0]+"  ");

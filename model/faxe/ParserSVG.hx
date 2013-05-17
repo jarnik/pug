@@ -50,7 +50,7 @@ class ParserSVG
                 if ( forcedSizeLevel > 0 ) {
                     forcedSize = new Rectangle( 0, 0, data.width, data.height );
                 }
-                //g.updateExtent( forcedSize );
+                g.updateExtent( forcedSize );
                 //g.alignment = align;
                 e = g;
             case DisplayPath( p ): 

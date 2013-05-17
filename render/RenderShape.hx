@@ -28,11 +28,15 @@ class RenderShape extends Render
 		
 		var node:DisplayNode = shape.getDisplayNode();
 		sprite = renderDisplayNode( node );
+		sprite.x = 0;
+		sprite.y = 0;
 		addChild( sprite );
 	}
 	
 	public static function renderDisplayNode( n:DisplayNode ):DisplayObject {
 		var s:Sprite = new Sprite();
+		s.x = n.fixedSize.x;
+        s.y = n.fixedSize.y;
 		var kid:DisplayObject;
         for ( c in n.children ) {
 			if ( Std.is( c, DisplayNode ) ) {
