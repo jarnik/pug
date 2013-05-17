@@ -7,6 +7,7 @@ import pug.model.gizmo.GizmoAttributes;
 import pug.model.gizmo.GizmoTransform;
 import pug.model.Library;
 import pug.model.symbol.Symbol;
+import pug.model.symbol.SymbolLayerState;
 
 /**
  * ...
@@ -14,7 +15,7 @@ import pug.model.symbol.Symbol;
  */
 class Effect
 {
-    public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):Effect {
+    public static function parse( xml:Xml, l:Library, libData:LIB_DATA, parent:SymbolLayerState = null ):Effect {
         var id:String = xml.get("id");
         var e:Effect = null;
         switch ( xml.nodeName ) {
@@ -32,6 +33,15 @@ class Effect
                 e = new EffectParticleEmitter();
 			case "text":            
                 e = new EffectText();
+			case "subElement":       
+				var source:Effect = parent.fetchChild(xml.get("source"));
+				if ( source == null )
+					return null;
+				var pathString:Array<String> = xml.get("path").split(",");
+				var path:Array<Int> = [];
+				for ( p in pathString )
+					path.push( Std.parseInt( p ) );
+                e = new EffectSubElement( source, path );
             default:
         }
 		e.id = id;

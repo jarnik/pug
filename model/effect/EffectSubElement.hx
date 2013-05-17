@@ -4,6 +4,7 @@ import pug.model.faxe.DisplayNode;
 import pug.model.faxe.DisplayShape;
 import pug.model.faxe.IDisplayNode;
 import pug.model.symbol.SymbolShape;
+import pug.model.Library;
 
 /**
  * ...
@@ -17,9 +18,17 @@ class EffectSubElement extends Effect
 	public function new( source:Effect, path:Array<Int> ) {
 		super( [] );
 		this.source = source;
-		this.path = path;
+		this.path = path.copy();
 		renderable = false;
 		source.addSubElement( this );
+	}
+	
+	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
+		export = super.export( export );
+		export.xml.set("path", path.join(",") );
+		export.xml.set("source", source.id );
+        export.xml.nodeName = "subElement";
+		return export;
 	}
 	
 	public function realign():Void {
