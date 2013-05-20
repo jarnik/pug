@@ -108,7 +108,7 @@ class RenderShape extends Render
         mGfx.endFill();
         mGfx.endLineStyle();
 
-        //s.alpha = alpha;
+        s.alpha = inPath.alpha;
 
         return s;
     }
