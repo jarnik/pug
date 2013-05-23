@@ -123,7 +123,7 @@ class Effect
 		frameStart = e.frameStart;
 		frameLength = e.frameLength;
 		level = e.level+1;
-		id = e.id + Std.string( Math.floor( Math.random() * 10 ) );
+		id = e.id + Std.string( Math.floor( Math.random() * 10 )+1 );
 		for ( i in 0...gizmos.length )
 			gizmos[i].copy( e.gizmos[ i ] ); 
 	}
