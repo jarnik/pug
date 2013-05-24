@@ -55,6 +55,7 @@ class Render extends Sprite
 		var r:RenderGroupStates = cast( renderSymbol( lib.get( id ) ), RenderGroupStates );
 		if ( state != null )
 			r.switchState( state );
+		r.render( 0, false );
 		return r;
 	}
 	

@@ -33,8 +33,8 @@ class RenderText extends Render
 	
 	override public function setLabel( text:String ):Void {
 		fixedLabel = text;
+		tf.defaultTextFormat = format;
 		tf.text = text;
-		tf.setTextFormat( format );
 	}
 	
 	private function getPlatformFont( path:String ):String {
