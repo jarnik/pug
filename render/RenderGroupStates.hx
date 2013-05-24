@@ -26,7 +26,7 @@ class RenderGroupStates extends RenderGroup
 		currentState = stateName;
 	}
 	
-	public function switchState( newState:String ):Void {
+	public function switchState( newState:String, immediateRender:Bool = false ):Void {
 		cachedStates.set( currentState, { 
 			cachedInstances: this.cachedInstances,
 			group: this.group
@@ -45,6 +45,8 @@ class RenderGroupStates extends RenderGroup
 				loadGroup( state );
 			}
 		}
+		if ( immediateRender )
+			render( 0, false );
 	}
 	
 	override public function play( loop:Bool = false, fps:Float = 30, state:String = null, onFinishedCallback:Dynamic = null ):Void {
