@@ -88,6 +88,8 @@ class Render extends Sprite
 		renderUpdatesEnabled = true;
 		this.effect = effect;
 		frameCount = 1;
+		if ( effect != null )
+			name = effect.id;
 	}
 	
 	public function render( frame:Int, applyTransforms:Bool = true ):Void {
