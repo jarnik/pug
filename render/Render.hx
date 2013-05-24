@@ -8,6 +8,7 @@ import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.EffectGroup;
 import pug.model.effect.EffectParticleEmitter;
 import pug.model.effect.EffectText;
+import pug.model.effect.EffectSubElement;
 import pug.model.effect.IEffectGroup;
 import pug.model.Library;
 import pug.model.symbol.SymbolImage;
@@ -33,16 +34,19 @@ import nme.events.MouseEvent;
 class Render extends Sprite
 {
 	public static function renderSymbol( s:Symbol ):Render {
-		var r:Render;
+		var r:Render = null;
 		var e:Render;
 		var f:Effect;
         if ( Std.is( s, SymbolLayer ) ) {
 			r = new RenderGroupStates( new EffectSymbolLayer( s ) );
 			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
-			r.render( 0, false );
-			return r;
         } else if ( Std.is( s, SymbolImage ) ) {
 			r = new RenderImage( null, cast( s, SymbolImage ) );
+		} else if ( Std.is( s, SymbolShape ) ) {
+			r = new RenderShape( null, cast( s, SymbolShape ) );
+		}
+		
+		if ( r != null ) {
 			r.render( 0, false );
 			return r;
 		}
@@ -65,6 +69,8 @@ class Render extends Sprite
 		} else if ( Std.is( e, EffectSymbol ) ) {
             if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolImage ) ) {
 				return new RenderImage( e, cast( cast( e, EffectSymbol ).symbol, SymbolImage ) );
+            } else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolShape ) ) {
+				return new RenderShape( e, cast( cast( e, EffectSymbol ).symbol, SymbolShape ) );
             } else
 				return null;
 		} else if( Std.is( e, EffectGroup ) ) {
@@ -76,6 +82,22 @@ class Render extends Sprite
         }
 		return null;
 	}
+
+	private static function applyTransform( g:GizmoTransform, d:DisplayObject, frame:Int = 0 ):Void {
+		var position:Array<Dynamic> = g.paramPosition.getValues( frame );
+		var rot:Array<Dynamic> = g.paramRotation.getValues( frame );
+		var scale:Array<Dynamic> = g.paramScale.getValues( frame );
+		d.x = position[ 0 ];
+		d.y = position[ 1 ];
+		d.rotation = rot[ 0 ];
+		d.scaleX = scale[ 0 ];
+		d.scaleY = scale[ 1 ];
+	}
+	
+	private static function applyAttributes( g:GizmoAttributes, d:DisplayObject, frame:Int = 0 ):Void {
+		var alpha:Array<Dynamic> = g.paramAlpha.getValues( frame );
+        d.alpha = alpha[ 0 ];
+    }	
 	
 	public var effect:Effect;
 	public var player:Player;
@@ -97,6 +119,36 @@ class Render extends Sprite
 			applyTransform( effect.gizmoTransform, this, frame );
 			applyAttributes( effect.gizmoAttributes, this, frame );			
 		}
+	}
+	
+	public function renderSubElements( frame:Int ):Void {
+		var d:DisplayObject;
+		if ( effect != null )
+			for ( e in effect.subElements ) {
+				d = fetchSubElement( e.path );
+				if ( d != null ) {
+					applyTransform( e.gizmoTransform, d, frame );
+					applyAttributes( e.gizmoAttributes, d, frame );
+				}
+			}
+	}
+	
+	public function fetchSubElement( path:Array<Int> ):DisplayObject {
+		var index:Int = -1;
+		var p:DisplayObjectContainer = this;
+		while ( index < path.length-1 ) {
+			index++;
+			if ( p.numChildren < path[ index ] )
+				return null;
+			if ( index == path.length-1 ) {
+				return p.getChildAt( path[ index ] );
+			} else {
+				if ( !Std.is( p.getChildAt( path[ index ] ), DisplayObjectContainer ) )
+					return null;
+				p = cast( p.getChildAt( path[ index ] ), DisplayObjectContainer );
+			}
+		}
+		return null;
 	}
 	
 	public function getFrameCount():Int {
@@ -138,23 +190,7 @@ class Render extends Sprite
 	
 	private function onSetFrame( f:Int ):Void {
 		render( f, false );
-	}
-	
-	private function applyTransform( g:GizmoTransform, d:DisplayObject, frame:Int = 0 ):Void {
-		var position:Array<Dynamic> = g.paramPosition.getValues( frame );
-		var rot:Array<Dynamic> = g.paramRotation.getValues( frame );
-		var scale:Array<Dynamic> = g.paramScale.getValues( frame );
-		x = position[ 0 ];
-		y = position[ 1 ];
-		rotation = rot[ 0 ];
-		scaleX = scale[ 0 ];
-		scaleY = scale[ 1 ];
-	}
-	
-	private function applyAttributes( g:GizmoAttributes, d:DisplayObject, frame:Int = 0 ):Void {
-		var alpha:Array<Dynamic> = g.paramAlpha.getValues( frame );
-        this.alpha = alpha[ 0 ];
-    }
+	}	
 	
 	public function onClick( _callback:Dynamic = null ):Void {
         buttonMode = true;

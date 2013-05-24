@@ -72,7 +72,7 @@ class RenderGroup extends Render
         var f:Int;
 		for ( i in 0...group.children.length ) {
             e = group.children[ i ];
-			if ( !isVisible( e, frame ) )
+			if ( !isVisible( e, frame ) || !e.renderable )
 				continue;
 			r = cachedInstances.get( e.id );
             if ( r == null ) {

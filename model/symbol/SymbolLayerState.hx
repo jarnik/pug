@@ -18,7 +18,7 @@ class SymbolLayerState implements IEffectGroup
 		
 		var e:Effect;
         for ( x in xml.elements() ) {
-            e = Effect.parse( x, l, libData );
+            e = Effect.parse( x, l, libData, s );
             if ( e == null ) {
                 return null;
             } else {
@@ -45,6 +45,13 @@ class SymbolLayerState implements IEffectGroup
 		e.level = children.length;
 		children.push( e );
     }
+	
+	public function fetchChild( id:String ):Effect {
+		for ( c in children )
+			if ( c.id == id )
+				return c;
+		return null;
+	}
 
     public function removeChild( e:Effect ):Void {
 		children.remove( e );

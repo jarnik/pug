@@ -1,6 +1,15 @@
-package render;
+package pug.render;
 
-import model.symbol.SymbolShape;
+import format.gfx.GfxGraphics;
+import format.svg.Path;
+import format.svg.RenderContext;
+import nme.display.DisplayObject;
+import nme.display.Sprite;
+import nme.geom.Matrix;
+import pug.model.effect.Effect;
+import pug.model.faxe.DisplayNode;
+import pug.model.faxe.DisplayShape;
+import pug.model.symbol.SymbolShape;
 
 /**
  * ...
@@ -8,24 +17,52 @@ import model.symbol.SymbolShape;
  */
 class RenderShape extends Render
 {
+	
 	public var shape:SymbolShape;
+	public var sprite:DisplayObject;
 
-	public function new( shape:SymbolShape ) 
+	public function new( effect:Effect, shape:SymbolShape ) 
 	{
+		super( effect );
 		this.shape = shape;
+		
+		var node:DisplayNode = shape.getDisplayNode();
+		sprite = renderDisplayNode( node );
+		sprite.x = 0;
+		sprite.y = 0;
+		addChild( sprite );
 	}
 	
-	override public function render( frame:Int ):Void {
-		super.render();
+	public override function render( frame:Int, applyTransforms:Bool = true ):Void {
+		super.render( frame, applyTransforms );
+		renderSubElements( frame );
+	}
+	
+	public static function renderDisplayNode( n:DisplayNode ):DisplayObject {
+		var s:Sprite = new Sprite();
+		s.x = n.fixedSize.x;
+        s.y = n.fixedSize.y;
+		var kid:DisplayObject;
+        for ( c in n.children ) {
+			if ( Std.is( c, DisplayNode ) ) {
+				kid = renderDisplayNode( cast( c, DisplayNode ) );
+			} else {
+				kid = renderDisplayShape( cast( c, DisplayShape ) );
+			}
+			if ( kid != null )
+				s.addChild( kid );
+        }
 		
-		applyTransform( shape.gizmoTransform, this, frame );
-		applyAttributes( shape.gizmoAttributes, this, frame );
+		return s;
+	}
+	
+	
+	public static function renderDisplayShape( n:DisplayShape ):DisplayObject {
         var s:Sprite = new Sprite();
-        //s.x = fixedSize.x;
-        //s.y = fixedSize.y;
+        s.x = n.fixedSize.x;
+        s.y = n.fixedSize.y;
         //trace("rendering shape at "+s.x+" "+s.y);
-
-        var inPath:Path = shape.path;
+        var inPath:Path = n.path;
         var m:Matrix = inPath.matrix.clone();
         var mGfx:GfxGraphics = new GfxGraphics( s.graphics );
         var context:RenderContext = new RenderContext( m );
@@ -65,15 +102,15 @@ class RenderShape extends Render
            mGfx.lineStyle(style);
         }
 
-        for(segment in path.segments)           
+        for(segment in inPath.segments)           
             segment.toGfx(mGfx, context);
 
         mGfx.endFill();
         mGfx.endLineStyle();
 
-        //s.alpha = alpha;
+        s.alpha = inPath.alpha;
 
-        addChild( s );
+        return s;
     }
 	
 }

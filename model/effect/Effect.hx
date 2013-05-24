@@ -7,6 +7,7 @@ import pug.model.gizmo.GizmoAttributes;
 import pug.model.gizmo.GizmoTransform;
 import pug.model.Library;
 import pug.model.symbol.Symbol;
+import pug.model.symbol.SymbolLayerState;
 
 /**
  * ...
@@ -14,7 +15,7 @@ import pug.model.symbol.Symbol;
  */
 class Effect
 {
-    public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):Effect {
+    public static function parse( xml:Xml, l:Library, libData:LIB_DATA, parent:SymbolLayerState = null ):Effect {
         var id:String = xml.get("id");
         var e:Effect = null;
         switch ( xml.nodeName ) {
@@ -32,6 +33,15 @@ class Effect
                 e = new EffectParticleEmitter();
 			case "text":            
                 e = new EffectText();
+			case "subElement":       
+				var source:Effect = parent.fetchChild(xml.get("source"));
+				if ( source == null )
+					return null;
+				var pathString:Array<String> = xml.get("path").split(",");
+				var path:Array<Int> = [];
+				for ( p in pathString )
+					path.push( Std.parseInt( p ) );
+                e = new EffectSubElement( source, path );
             default:
         }
 		e.id = id;
@@ -65,9 +75,12 @@ class Effect
 	public var frameLength:Int;
 	public var level:Int;
 	public var id:String;
+	public var renderable:Bool;
 	
 	public var gizmoTransform:GizmoTransform;
 	public var gizmoAttributes:GizmoAttributes;
+	
+	public var subElements:Array<EffectSubElement>;
 	
 	public function new( gizmos:Array<Gizmo> ) 
 	{
@@ -76,6 +89,9 @@ class Effect
 		frameStart = 0;
 		frameLength = 1;
 		level = 0;
+		
+		renderable = true;
+		subElements = [];
 
         id = "effect"+Math.floor(Math.random()*1000);
 		
@@ -107,8 +123,12 @@ class Effect
 		frameStart = e.frameStart;
 		frameLength = e.frameLength;
 		level = e.level+1;
-		id = e.id + Std.string( Math.floor( Math.random() * 10 ) );
+		id = e.id + Std.string( Math.floor( Math.random() * 10 )+1 );
 		for ( i in 0...gizmos.length )
 			gizmos[i].copy( e.gizmos[ i ] ); 
+	}
+	
+	public function addSubElement( e:EffectSubElement ):Void {
+		subElements.push( e );
 	}
 }

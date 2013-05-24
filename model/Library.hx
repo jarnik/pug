@@ -2,6 +2,7 @@ package pug.model;
 
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolImage;
+import pug.model.symbol.SymbolShape;
 import nme.Assets;
 import Xml;
 import pug.model.utils.XmlFormatter;
@@ -14,7 +15,8 @@ import haxe.io.Input;
 
 typedef LIB_DATA = {
     xml:Xml,
-    images:Hash<BitmapData>
+    images:Hash<BitmapData>,
+	svgs:Hash<String>
 }
 
 typedef EXPORT_PUG_FILE = {
@@ -126,6 +128,15 @@ class Library
 				cast( duplicate, SymbolImage ).updateBitmap( bmd );
 		} else
 			symbols.push( new SymbolImage( id, bmd ) );
+	}
+	
+	public function importSVG( id:String, svg:String ):Void {
+		var duplicate:Symbol = get( id );
+		if ( duplicate != null ) {
+			if ( Std.is( duplicate, SymbolShape ) )
+				cast( duplicate, SymbolShape ).updateSVG( svg );
+		} else
+			symbols.push( new SymbolShape( id, ShapeFile( svg, id ) ) );
 	}
 
     public static function BAtoBytes( ba:ByteArray ):Bytes {
