@@ -39,6 +39,13 @@ class CurveKey
 				keyTypes.push( LINEAR );
 		}
 	}
+	
+	public function getSimpleValues():Array<Dynamic> {
+		var vals:Array <Dynamic> = [];
+		for ( v in values )
+			vals.push( v.getValue() );
+		return vals;
+	}
 
     public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		var xml:Xml = Xml.createElement("key");
