@@ -55,6 +55,8 @@ class RenderGroup extends Render
 			} else {
 				player.stop();
 				render( frameCount - 1, false );
+				if ( onFinishedCallback != null )
+					onFinishedCallback();
 			}
 		}
 	}

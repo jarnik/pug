@@ -103,6 +103,7 @@ class Render extends Sprite
 	public var player:Player;
 	public var renderUpdatesEnabled:Bool;
 	public var frameCount:Int;
+	private var onFinishedCallback:Dynamic;
 	
 	public function new( effect:Effect ) 
 	{
@@ -179,6 +180,7 @@ class Render extends Sprite
 			player = new Player();
 			player.onSetFrame.bind( onSetFrame );
 		}
+		this.onFinishedCallback = onFinishedCallback;
 		onSetFrame( 0 );
 		player.play( loop, fps );
 	}

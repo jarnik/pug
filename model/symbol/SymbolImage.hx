@@ -146,7 +146,12 @@ class SymbolImage extends Symbol
 		}
 		rows = Math.ceil( frames.length / cols );
 		
-		var bitmapData:BitmapData = new BitmapData( cols*frameWidth, rows*frameHeight, true, 0x00000000 );
+		var bitmapData:BitmapData;
+		#if neko
+			bitmapData = new BitmapData( cols * frameWidth, rows * frameHeight, true, { rgb: 0, a: 0 } );
+		#else
+			bitmapData = new BitmapData( cols * frameWidth, rows * frameHeight, true, 0x00000000 );
+		#end
 		var r:Rectangle = new Rectangle( 0, 0, frameWidth, frameHeight );
 		var p:Point = new Point();
 		var i:Int = 0;
