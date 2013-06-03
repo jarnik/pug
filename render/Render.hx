@@ -102,6 +102,7 @@ class Render extends Sprite
 	public var effect:Effect;
 	public var player:Player;
 	public var renderUpdatesEnabled:Bool;
+	public var infinite:Bool;
 	public var frameCount:Int;
 	private var onFinishedCallback:Dynamic;
 	
@@ -111,6 +112,7 @@ class Render extends Sprite
 		renderUpdatesEnabled = true;
 		this.effect = effect;
 		frameCount = 1;
+		infinite = false;
 		if ( effect != null )
 			name = effect.id;
 	}

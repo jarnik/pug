@@ -6,6 +6,7 @@ import nme.display.DisplayObject;
 
 enum STICKER {
 	ADD( d:DisplayObject );
+	INFINITE;
 	HIDE_RENDERS;
 }
 
@@ -46,11 +47,15 @@ class RenderGroup extends Render
         stickers.set( id+"===HIDE", HIDE_RENDERS );
     }
 	
+	public function addStickerInfinite( id:String ):Void {
+        stickers.set( id+"===INFINITE", INFINITE );
+    }
+	
 	override private function onSetFrame( f:Int ):Void {
 		if ( player.loop )  
 			render( f % frameCount, false );
 		else {
-			if ( f < frameCount ) {
+			if ( f < frameCount || infinite ) {
 				render( f, false );
 			} else {
 				player.stop();
@@ -65,9 +70,10 @@ class RenderGroup extends Render
 		super.render( frame, applyTransforms );
         clear();
 		
-		frame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
-		
-		frame = frame % frameCount;
+		if ( !infinite ) {
+			frame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
+			frame = frame % frameCount;
+		}
 		
 		var r:Render;
         var e:Effect;
@@ -97,6 +103,8 @@ class RenderGroup extends Render
 							r.addChild( d );
 					case HIDE_RENDERS:
 						r.hideContents();
+					case INFINITE:
+						r.infinite = true;
 				}
 			}
 		}
@@ -120,7 +128,10 @@ class RenderGroup extends Render
 	}
 	
 	private function isVisible( e:Effect, frame:Int ):Bool { 
-		if ( frame >= e.frameStart && frame < e.frameStart + e.frameLength )
+		var isInfinite:Bool = stickers.exists(e.id+"===INFINITE");
+		if ( frame >= e.frameStart && 
+			( frame < e.frameStart + e.frameLength || isInfinite )
+		)
 			return true;
 		return false;
 	}

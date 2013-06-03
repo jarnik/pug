@@ -16,16 +16,20 @@ class RenderParticles extends Render
 {
 	public var particleContainer:DisplayObjectContainer;
 	public var attractor:Point;
+	public var rangeOverride:Rectangle;
+	public var realtimeMode:Bool;
 
+	private var range:Rectangle;
     private var particles:Array<Particle>;
     private var states:Hash<ParticleSystemState>;
-    private var range:Rectangle;
     private var hash:String;
+	private var firstCachedFrame:Int;
 	private var lastBuiltFrame:Int;
 
 	public function new( effect:Effect ) {
 		super( effect );
         
+		realtimeMode = false;
         particleContainer = this;
 	}
 
@@ -33,6 +37,7 @@ class RenderParticles extends Render
 
         hash = cast( effect, EffectParticleEmitter ).hash;
 		lastBuiltFrame = -1;
+		firstCachedFrame = 0;
 
         if ( particles != null )
             for ( p in particles )
@@ -49,12 +54,16 @@ class RenderParticles extends Render
         if ( s == null )
             return;
         
-        var paramSize:Array<Dynamic> = cast( effect, EffectParticleEmitter ).gizmoParticles.paramSize.getValues( 0 );        
-		range = new Rectangle();
-        range.width = paramSize[ 0 ];
-        range.height = paramSize[ 1 ];
-        range.x = -range.width / 2;
-        range.y = -range.height / 2;
+        var paramSize:Array<Dynamic> = cast( effect, EffectParticleEmitter ).gizmoParticles.paramSize.getValues( 0 );      
+		if ( rangeOverride == null ) {
+			range = new Rectangle();
+			range.width = paramSize[ 0 ];
+			range.height = paramSize[ 1 ];
+			range.x = -range.width / 2;
+			range.y = -range.height / 2;
+		} else {
+			range = rangeOverride;
+		}
         var particleCount:Int = cast( effect, EffectParticleEmitter ).gizmoParticles.paramCount.getValues( 0 )[ 0 ];
         var r:Render;
         var p:Particle;
@@ -88,19 +97,28 @@ class RenderParticles extends Render
 		if ( states == null )
 			return;
 
-        if ( lastBuiltFrame < frame ) {
+		var state:ParticleSystemState = null;
+		if ( lastBuiltFrame < frame ) {
 			for ( f in (lastBuiltFrame+1)...frame+1 )
 				computeState( f );
 			lastBuiltFrame = frame;
-        }
-        var state:ParticleSystemState = states.get( Std.string( frame ) );
+		}
+		state = states.get( Std.string( frame ) );
+		if ( realtimeMode ) {
+			if ( lastBuiltFrame > 0 ) {
+				for ( f in (firstCachedFrame)...lastBuiltFrame )
+					states.remove( Std.string( f ) );
+				firstCachedFrame = lastBuiltFrame - 1;
+			}
+		}
 
-        for ( i in 0...state.p.length ) {
-            particles[ i ].apply( state.p[ i ] );
-        }
+		if ( state != null ) 
+			for ( i in 0...state.p.length ) {
+				particles[ i ].apply( state.p[ i ] );
+			}
     }
 
-    private function computeState( frame:Int ):Void {        
+    private function computeState( frame:Int ):ParticleSystemState {        
         var state:ParticleSystemState = { p: [], emitTimer:0, nextIndex:0 };
 
         var prevState:ParticleSystemState = states.get( Std.string( frame - 1 ) );
@@ -189,7 +207,8 @@ class RenderParticles extends Render
 		}
 		state.nextIndex = (state.nextIndex + emitNewParticles) % particles.length;
 
-        states.set( Std.string( frame ), state );
+		states.set( Std.string( frame ), state );
+		return state;
     }
 	
 	private function isWithinEmitRange( i:Int, cycle:Int, rangeStart:Int, rangeLength:Int ):Bool {
