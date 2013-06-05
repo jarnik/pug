@@ -33,7 +33,7 @@ class Effect
                 e = new EffectParticleEmitter();
 			case "text":            
                 e = new EffectText();
-			case "subElement":       
+			case "ref":       
 				var source:Effect = parent.fetchChild(xml.get("source"));
 				if ( source == null )
 					return null;
@@ -41,7 +41,7 @@ class Effect
 				var path:Array<Int> = [];
 				for ( p in pathString )
 					path.push( Std.parseInt( p ) );
-                e = new EffectSubElement( source, path );
+                e = new EffectRef( source, path );
             default:
         }
 		e.id = id;
@@ -80,7 +80,7 @@ class Effect
 	public var gizmoTransform:GizmoTransform;
 	public var gizmoAttributes:GizmoAttributes;
 	
-	public var subElements:Array<EffectSubElement>;
+	public var refs:Array<EffectRef>;
 	
 	public function new( gizmos:Array<Gizmo> ) 
 	{
@@ -91,7 +91,7 @@ class Effect
 		level = 0;
 		
 		renderable = true;
-		subElements = [];
+		refs = [];
 
         id = "effect"+Math.floor(Math.random()*1000);
 		
@@ -128,7 +128,7 @@ class Effect
 			gizmos[i].copy( e.gizmos[ i ] ); 
 	}
 	
-	public function addSubElement( e:EffectSubElement ):Void {
-		subElements.push( e );
+	public function addRef( e:EffectRef ):Void {
+		refs.push( e );
 	}
 }

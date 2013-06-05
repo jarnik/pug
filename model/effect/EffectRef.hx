@@ -10,7 +10,7 @@ import pug.model.Library;
  * ...
  * @author Jarnik
  */
-class EffectSubElement extends Effect
+class EffectRef extends Effect
 {
 	public var path:Array<Int>;
 	public var source:Effect;
@@ -20,14 +20,14 @@ class EffectSubElement extends Effect
 		this.source = source;
 		this.path = path.copy();
 		renderable = false;
-		source.addSubElement( this );
+		source.addRef( this );
 	}
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		export = super.export( export );
 		export.xml.set("path", path.join(",") );
 		export.xml.set("source", source.id );
-        export.xml.nodeName = "subElement";
+        export.xml.nodeName = "ref";
 		return export;
 	}
 	

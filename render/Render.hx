@@ -8,7 +8,7 @@ import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.EffectGroup;
 import pug.model.effect.EffectParticleEmitter;
 import pug.model.effect.EffectText;
-import pug.model.effect.EffectSubElement;
+import pug.model.effect.EffectRef;
 import pug.model.effect.IEffectGroup;
 import pug.model.Library;
 import pug.model.symbol.SymbolImage;
@@ -127,7 +127,7 @@ class Render extends Sprite
 	public function renderSubElements( frame:Int ):Void {
 		var d:DisplayObject;
 		if ( effect != null )
-			for ( e in effect.subElements ) {
+			for ( e in effect.refs ) {
 				d = fetchSubElement( e.path );
 				if ( d != null ) {
 					applyTransform( e.gizmoTransform, d, frame );
