@@ -33,7 +33,8 @@ class Effect
                 e = new EffectParticleEmitter();
 			case "text":            
                 e = new EffectText();
-			case "ref":       
+			case "ref", 
+				"subElement":  // backward compat
 				var source:Effect = parent.fetchChild(xml.get("source"));
 				if ( source == null )
 					return null;
