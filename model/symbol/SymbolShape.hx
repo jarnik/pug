@@ -43,6 +43,9 @@ class SymbolShape extends Symbol
 		if ( sourceNode == null )
 			sourceNode = svgRoot;
 		
+		if ( path == null || path == "" )
+			return sourceNode;
+			
         var pathElements:Array<String> = path.split("."); 
         //Debug.log("fetching kid "+pathElements[0]+"  ");
 
