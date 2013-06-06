@@ -46,6 +46,8 @@ class Render extends Sprite
 			r = new RenderImage( null, cast( s, SymbolImage ) );
 		} else if ( Std.is( s, SymbolShape ) ) {
 			r = new RenderShape( null, cast( s, SymbolShape ) );
+		} else if ( Std.is( s, SymbolSub ) ) {
+			r = new RenderSub( null, cast( s, SymbolSub ) );
 		}
 		
 		if ( r != null ) {

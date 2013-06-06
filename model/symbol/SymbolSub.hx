@@ -1,6 +1,7 @@
 package pug.model.symbol;
 
 import pug.model.Library;
+import pug.model.symbol.ISymbolSub;
 
 /**
  * ...
@@ -22,6 +23,13 @@ class SymbolSub extends Symbol, implements ISymbolSub {
 		super( id );
 		this.source = source;
 		this.path = path;
+	}
+	
+	public override function fetchSymbolSub( path:String ):SUBASSET {
+		var s:Symbol = Library.lib.get( source );
+		if ( s == null )
+			return null;
+		return s.fetchSymbolSub( this.path + "." + path);
 	}
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
