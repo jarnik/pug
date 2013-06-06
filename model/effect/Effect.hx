@@ -43,6 +43,11 @@ class Effect
 				for ( p in pathString )
 					path.push( Std.parseInt( p ) );
                 e = new EffectRef( source, path );
+			case "effectSub":            
+                e = new EffectSub(
+					xml.get("source"),
+					xml.get("path")
+				);
             default:
         }
 		e.id = id;
