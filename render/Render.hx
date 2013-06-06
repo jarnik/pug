@@ -9,12 +9,14 @@ import pug.model.effect.EffectGroup;
 import pug.model.effect.EffectParticleEmitter;
 import pug.model.effect.EffectText;
 import pug.model.effect.EffectRef;
+import pug.model.effect.EffectSub;
 import pug.model.effect.IEffectGroup;
 import pug.model.Library;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolLayer;
 import pug.model.symbol.SymbolLayerState;
 import pug.model.symbol.SymbolShape;
+import pug.model.symbol.SymbolSub;
 import pug.model.gizmo.GizmoAttributes;
 import pug.model.gizmo.GizmoTransform;
 import pug.model.value.ValueFloat;
@@ -71,6 +73,8 @@ class Render extends Sprite
 				return new RenderImage( e, cast( cast( e, EffectSymbol ).symbol, SymbolImage ) );
             } else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolShape ) ) {
 				return new RenderShape( e, cast( cast( e, EffectSymbol ).symbol, SymbolShape ) );
+			} else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolSub ) ) {
+				return new RenderSub( e, cast( cast( e, EffectSymbol ).symbol, SymbolSub ) );
             } else
 				return null;
 		} else if( Std.is( e, EffectGroup ) ) {
@@ -79,6 +83,8 @@ class Render extends Sprite
 			return new RenderParticles( e );	
         } else if( Std.is( e, EffectText ) ) {
 			return new RenderText( e );	
+		} else if( Std.is( e, EffectSub ) ) {
+			return new RenderSub( e, cast( e, EffectSub ) );	
         }
 		return null;
 	}

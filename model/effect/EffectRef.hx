@@ -35,7 +35,7 @@ class EffectRef extends Effect
 		var rx:Float = 0;
 		var ry:Float = 0;
 		
-		var node:IDisplayNode = cast( cast( source, EffectSymbol ).symbol, SymbolShape ).getDisplayNode();
+		var node:IDisplayNode = cast( cast( source, EffectSymbol ).symbol, SymbolShape ).svgRoot;
 		var index:Int = 0;
 		while ( index < path.length - 1 ) {
 			index++;

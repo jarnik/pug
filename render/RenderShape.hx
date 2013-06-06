@@ -26,7 +26,7 @@ class RenderShape extends Render
 		super( effect );
 		this.shape = shape;
 		
-		var node:DisplayNode = shape.getDisplayNode();
+		var node:DisplayNode = shape.svgRoot;
 		sprite = renderDisplayNode( node );
 		sprite.x = 0;
 		sprite.y = 0;

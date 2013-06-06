@@ -2,6 +2,7 @@ package pug.model.symbol;
 import nme.geom.Rectangle;
 
 import pug.model.Library;
+import pug.model.symbol.ISymbolSub;
 
 /**
  * ...
@@ -28,6 +29,10 @@ class Symbol
 	{
 		this.id = id;
 		size = new Rectangle();
+	}
+	
+	public function fetchSymbolSub( path:String ):SUBASSET {
+		return null; 
 	}
 	
 	public function export( export:EXPORT_PUG ):EXPORT_PUG {

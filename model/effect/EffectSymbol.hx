@@ -1,4 +1,5 @@
 package pug.model.effect;
+import pug.model.symbol.ISymbolSub;
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolLayer;
 import pug.model.Library;
@@ -7,8 +8,8 @@ import pug.model.Library;
  * ...
  * @author Jarnik
  */
-class EffectSymbol extends Effect
-{
+class EffectSymbol extends Effect {
+	
 	public static function create( symbol:Symbol ):EffectSymbol {
 		if ( Std.is( symbol, SymbolLayer ) ) {
 			return new EffectSymbolLayer( symbol );

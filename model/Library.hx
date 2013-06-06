@@ -136,7 +136,7 @@ class Library
 			if ( Std.is( duplicate, SymbolShape ) )
 				cast( duplicate, SymbolShape ).updateSVG( svg );
 		} else
-			symbols.push( new SymbolShape( id, ShapeFile( svg, id ) ) );
+			symbols.push( new SymbolShape( id, svg ) );
 	}
 
     public static function BAtoBytes( ba:ByteArray ):Bytes {
