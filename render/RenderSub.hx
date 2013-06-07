@@ -42,6 +42,8 @@ class RenderSub extends Render
 						s = new Bitmap( bmd );
 					case SubAssetDisplayNode( n ):
 						s = RenderShape.renderDisplayNode( n );
+						s.x = 0;
+						s.y = 0;
 				}
 				if ( s != null ) {
 					addChild( s );
