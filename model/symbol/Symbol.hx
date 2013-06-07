@@ -17,6 +17,9 @@ class Symbol
             case "symbolLayer":
                 return SymbolLayer.parse( xml, l, libData );
 			case "symbolShape":
+				// backwards compatibility
+				if ( xml.get("source") != null )
+					return SymbolSub.parse( xml, l, libData );
                 return SymbolShape.parse( xml, l, libData );
 			case "symbolSub":
                 return SymbolSub.parse( xml, l, libData );
