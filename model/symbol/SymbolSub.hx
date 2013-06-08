@@ -33,11 +33,11 @@ class SymbolSub extends Symbol, implements ISymbolSub {
 	}
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
-		var xml:Xml = Xml.createElement("symbolSub");
-		xml.set( "id", id );
+		export = super.export( export );
+		var xml:Xml = export.xml;
+		xml.nodeName = "symbolSub";
 		xml.set( "source", source );
 		xml.set( "path", path );
-		export.xml = xml;
 		return export;
 	}
 }

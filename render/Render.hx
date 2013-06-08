@@ -1,5 +1,6 @@
 package pug.render;
 import flash.display.DisplayObject;
+import flash.geom.Rectangle;
 import nme.geom.Point;
 import nme.Lib;
 import pug.model.effect.Effect;
@@ -11,6 +12,7 @@ import pug.model.effect.EffectText;
 import pug.model.effect.EffectRef;
 import pug.model.effect.EffectSub;
 import pug.model.effect.IEffectGroup;
+import pug.model.gizmo.GizmoAlignment;
 import pug.model.Library;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolLayer;
@@ -105,13 +107,15 @@ class Render extends Sprite
 	private static function applyAttributes( g:GizmoAttributes, d:DisplayObject, frame:Int = 0 ):Void {
 		var alpha:Array<Dynamic> = g.paramAlpha.getValues( frame );
         d.alpha = alpha[ 0 ];
-    }	
-	
+    }
+		
 	public var effect:Effect;
 	public var player:Player;
 	public var renderUpdatesEnabled:Bool;
 	public var infinite:Bool;
 	public var frameCount:Int;
+	public var manualAlignRange:Rectangle;
+	public var alignmentSize:Rectangle;
 	private var onFinishedCallback:Dynamic;
 	
 	public function new( effect:Effect ) 
@@ -130,6 +134,8 @@ class Render extends Sprite
 			applyTransform( effect.gizmoTransform, this, frame );
 			applyAttributes( effect.gizmoAttributes, this, frame );			
 		}
+		if ( manualAlignRange != null && effect != null )
+			align( manualAlignRange, frame );
 	}
 	
 	public function renderSubElements( frame:Int ):Void {
@@ -173,6 +179,59 @@ class Render extends Sprite
 		x = p.x;
 		y = p.y;
 	}
+	
+	public function getFixedSize():Rectangle {
+		return new Rectangle(); // given by fixed symbol / SVG shape / image size
+	}
+	
+	public function align( r:Rectangle = null, frame:Int = 0 ):Void {
+        //Debug.log(name+" align CFG "+alignment+" margins "+marginLeft+" "+marginRight+" "+marginTop+" "+marginBottom);
+		var g:GizmoAlignment = effect.gizmoAlignment;
+		var switches:Array<Dynamic> = g.paramSwitches.getValues( frame );
+		
+		alignmentSize = getFixedSize().clone();
+		
+		if ( switches[1] ) {
+			// use fixed size frame
+			var fixedSize:Array<Dynamic> = g.paramFixedSize.getValues( frame );
+			alignmentSize.width = fixedSize[0];
+			alignmentSize.height = fixedSize[1];
+		}
+
+		if ( switches[ 0 ] || manualAlignRange != null ) {
+			var alignment:Array<Dynamic> = g.paramAlignment.getValues( frame );
+			var borders:Array<Dynamic> = g.paramBorders.getValues( frame );
+			
+			switch ( alignment[0] ) {
+				case "min":
+					x = r.x + borders[ 0 ];
+				case "max":
+					x = r.x + r.width - alignmentSize.width - borders[ 2 ];
+				case "center":
+					x = r.x + (r.width - alignmentSize.width) / 2;
+				case "stretch":
+					x = r.x;
+					alignmentSize.width = r.width;
+				default:
+			}
+
+			switch ( alignment[1] ) {
+				case "min":
+					y = r.y + borders[ 1 ];
+				case "max":
+					y = r.y + r.height - alignmentSize.height - borders[ 3 ];
+				case "center":
+					y = r.y + (r.height - alignmentSize.height) / 2;
+				case "stretch":
+					y = r.y;
+					alignmentSize.height = r.height;
+				default:                    
+			}
+		} else {
+			alignmentSize = null;
+		}
+        //trace(name+" aligning myself to "+x+" "+y+" within "+r+" by "+alignment);        
+    }
 	
 	public function hideContents():Void {
 	}

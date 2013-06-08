@@ -85,6 +85,7 @@ class Effect
 	
 	public var gizmoTransform:GizmoTransform;
 	public var gizmoAttributes:GizmoAttributes;
+	public var gizmoAlignment:GizmoAlignment;
 	
 	public var refs:Array<EffectRef>;
 	
@@ -103,6 +104,7 @@ class Effect
 		
 		gizmos.push( gizmoTransform = new GizmoTransform() );
 		gizmos.push( gizmoAttributes = new GizmoAttributes() );
+		gizmos.push( gizmoAlignment = new GizmoAlignment() );
 	}
 	
     public function export( export:EXPORT_PUG ):EXPORT_PUG {

@@ -61,14 +61,14 @@ class SymbolImage extends Symbol
     }
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
-		var xml:Xml = Xml.createElement("sprite");
+		export = super.export( export );
+		var xml:Xml = export.xml;
+		xml.nodeName = "sprite";
         var filename:String = id+".png";
-		xml.set( "id", id );
 		xml.set( "data", filename );
 		xml.set( "frameWidth", Std.string( frameWidth ) );
 		xml.set( "frameHeight", Std.string( frameHeight ) );
 		xml.set( "frames", Std.string( frames.length ) );
-        export.xml = xml;
         export.files.push( {
             name: filename,
             bytes: getPNGBytes()

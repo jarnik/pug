@@ -1,4 +1,5 @@
 package pug.render;
+import nme.geom.Rectangle;
 import pug.model.effect.Effect;
 import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.IEffectGroup;
@@ -67,7 +68,6 @@ class RenderGroup extends Render
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
-		super.render( frame, applyTransforms );
         clear();
 		
 		if ( !infinite ) {
@@ -88,7 +88,7 @@ class RenderGroup extends Render
                 cachedInstances.set( e.id, r );
             }
 			addChild( r );
-            f = frame - group.children[ i ].frameStart;
+            f = frame - e.frameStart;
 			if ( r.renderUpdatesEnabled )
 				r.render( f );
 		}
@@ -108,6 +108,29 @@ class RenderGroup extends Render
 				}
 			}
 		}
+		
+		super.render( frame, applyTransforms );
+	}
+	
+	public override function align( r:Rectangle = null, frame:Int = 0 ):Void {
+		super.align( r, frame );
+		
+		if ( alignmentSize == null )
+			return;
+		
+        r.x = 0; r.y = 0;
+        r.width = ( manualAlignRange == null ) ? r.width : alignmentSize.width;
+        r.height = ( manualAlignRange == null ) ? r.height : alignmentSize.height;
+
+		var kid:Render;
+        var e:Effect;
+		for ( i in 0...group.children.length ) {
+            e = group.children[ i ];
+			if ( !isVisible( e, frame ) || !e.renderable )
+				continue;
+			kid = cachedInstances.get( e.id );
+			kid.align( r.clone(), frame - e.frameStart );
+		}		
 	}
 	
 	override public function hideContents():Void {

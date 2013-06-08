@@ -67,17 +67,15 @@ class SymbolShape extends Symbol
     }
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
-		var xml:Xml = Xml.createElement("symbolShape");
-		xml.set( "id", id );
-		
+		export = super.export( export );
+		var xml:Xml = export.xml;
+		xml.nodeName = "symbolShape";
 		var filename:String = id+".svg";
 		xml.set( "data", filename );			
 		export.files.push( {
 			name: filename,
 			bytes: getSVGBytes()
 		} );
-		export.xml = xml;
-		       
 		return export;
 	}
 	

@@ -1,4 +1,6 @@
 package pug.render;
+import nme.geom.Point;
+import nme.geom.Rectangle;
 import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.IEffectGroup;
 import pug.model.symbol.SymbolLayer;
@@ -64,4 +66,7 @@ class RenderGroupStates extends RenderGroup
 		super.render( frame, applyTransforms );
 	}
 	
+	public override function getFixedSize():Rectangle {
+		return cast( effect, EffectSymbolLayer ).symbol.size;
+	}
 }

@@ -2,6 +2,7 @@ package pug.render;
 import nme.display.Bitmap;
 import nme.display.DisplayObject;
 import nme.display.Sprite;
+import nme.geom.Rectangle;
 import pug.model.effect.Effect;
 import pug.model.effect.EffectSub;
 import pug.model.symbol.ISymbolSub;
@@ -17,6 +18,7 @@ class RenderSub extends Render
 	private var sub:ISymbolSub;
 	private var s:DisplayObject;
 	private var cached_path:String;
+	private var size:Rectangle;
 
 	public function new( effect:Effect, sub:ISymbolSub ) {
 		super( effect );
@@ -40,10 +42,12 @@ class RenderSub extends Render
 				switch ( asset ) {
 					case SubAssetBitmapData( bmd ):
 						s = new Bitmap( bmd );
+						size = new Rectangle( 0, 0, bmd.width, bmd.height );
 					case SubAssetDisplayNode( n ):
 						s = RenderShape.renderDisplayNode( n );
 						s.x = 0;
 						s.y = 0;
+						size = n.fixedSize.clone();
 				}
 				if ( s != null ) {
 					addChild( s );
@@ -55,6 +59,10 @@ class RenderSub extends Render
 	public override function render( frame:Int, applyTransforms:Bool = true ):Void {
 		super.render( frame, applyTransforms );
 		updateSub();
+	}
+	
+	public override function getFixedSize():Rectangle {
+		return size;
 	}
 	
 }

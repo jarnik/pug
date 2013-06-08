@@ -11,20 +11,28 @@ import pug.model.symbol.ISymbolSub;
 class Symbol
 {
     public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):Symbol {
+		var s:Symbol = null;
         switch ( xml.nodeName ) {
             case "sprite":
-                return SymbolImage.parse( xml, l, libData );
+                s = SymbolImage.parse( xml, l, libData );
             case "symbolLayer":
-                return SymbolLayer.parse( xml, l, libData );
+                s = SymbolLayer.parse( xml, l, libData );
 			case "symbolShape":
 				// backwards compatibility
 				if ( xml.get("source") != null )
-					return SymbolSub.parse( xml, l, libData );
-                return SymbolShape.parse( xml, l, libData );
+					s = SymbolSub.parse( xml, l, libData );
+				else
+					s = SymbolShape.parse( xml, l, libData );
 			case "symbolSub":
-                return SymbolSub.parse( xml, l, libData );
+                s = SymbolSub.parse( xml, l, libData );
         }
-        return null;
+		if ( s != null ) {
+			if ( xml.get("width") != null ) {
+				s.size.width = Std.parseFloat( xml.get("width") );
+				s.size.height = Std.parseFloat( xml.get("height") );
+			}
+		}
+        return s;
     }
 
 	public var id:String;
@@ -43,6 +51,8 @@ class Symbol
 	public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		var xml:Xml = Xml.createElement("symbol");
 		xml.set( "id", id );
+		xml.set( "width", Std.string( size.width ) );
+		xml.set( "height", Std.string( size.height ) );
         export.xml = xml;        
 		return export;
 	}

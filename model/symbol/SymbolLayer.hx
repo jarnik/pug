@@ -80,8 +80,9 @@ class SymbolLayer extends Symbol
     }
 
     override public function export( export:EXPORT_PUG ):EXPORT_PUG {
-		var xml:Xml = Xml.createElement("symbolLayer");
-		xml.set( "id", id );
+		export = super.export( export );
+		var xml:Xml = export.xml;
+		xml.nodeName = "symbolLayer";
         var child_export:EXPORT_PUG;
         for ( s in states ) {
             child_export = s.export( export );

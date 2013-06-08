@@ -1,6 +1,7 @@
 package pug.render;
 
 import nme.display.BitmapData;
+import nme.geom.Rectangle;
 import pug.model.effect.Effect;
 import pug.model.symbol.SymbolImage;
 import nme.display.Bitmap;
@@ -37,6 +38,10 @@ class RenderImage extends Render
 	
 	override public function hideContents():Void {
 		bitmap.visible = false;
+	}
+	
+	public override function getFixedSize():Rectangle {
+		return new Rectangle( 0, 0, bitmap.bitmapData.width, bitmap.bitmapData.height );
 	}
 	
 }

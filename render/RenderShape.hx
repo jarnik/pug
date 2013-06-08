@@ -6,6 +6,7 @@ import format.svg.RenderContext;
 import nme.display.DisplayObject;
 import nme.display.Sprite;
 import nme.geom.Matrix;
+import nme.geom.Rectangle;
 import pug.model.effect.Effect;
 import pug.model.faxe.DisplayNode;
 import pug.model.faxe.DisplayShape;
@@ -20,13 +21,14 @@ class RenderShape extends Render
 	
 	public var shape:SymbolShape;
 	public var sprite:DisplayObject;
+	public var node:DisplayNode;
 
 	public function new( effect:Effect, shape:SymbolShape ) 
 	{
 		super( effect );
 		this.shape = shape;
 		
-		var node:DisplayNode = shape.svgRoot;
+		node = shape.svgRoot;
 		sprite = renderDisplayNode( node );
 		sprite.x = 0;
 		sprite.y = 0;
@@ -112,5 +114,9 @@ class RenderShape extends Render
 
         return s;
     }
+	
+	public override function getFixedSize():Rectangle {
+		return node.fixedSize;
+	}
 	
 }
