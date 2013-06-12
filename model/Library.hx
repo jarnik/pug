@@ -1,5 +1,6 @@
 package pug.model;
 
+import haxe.Int32;
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolShape;
@@ -13,25 +14,23 @@ import hsl.haxe.DirectSignaler;
 import haxe.io.Bytes;
 import haxe.io.Input;
 
-typedef IMAGEDATA = {
+typedef FILEDATA = {
+	name: String,
 	bmd: BitmapData,
-	compressed: Bytes
+	string: String,
+	bytes: Bytes,
+	crc: Int32
 }
 
 typedef LIB_DATA = {
     xml:Xml,
-    images:Hash<IMAGEDATA>,
-	svgs:Hash<String>
-}
-
-typedef EXPORT_PUG_FILE = {
-    var name:String;
-    var bytes:Bytes;
+    images:Hash<FILEDATA>,
+	svgs:Hash<FILEDATA>
 }
 
 typedef EXPORT_PUG = {
     var xml:Xml;
-    var files:Array<EXPORT_PUG_FILE>;
+    var files:Array<FILEDATA>;
 }
 
 /**
@@ -73,7 +72,10 @@ class Library
 		XmlFormatter.stringify( xml, str, " " );
         export.files.push( {
             name: "pug.xml",
-            bytes: Bytes.ofString( str.toString() )
+			bmd: null,
+			string: null,
+            bytes: Bytes.ofString( str.toString() ),
+			crc: Int32.ofInt( 0 )
         } );
         export.xml = xml;
 		return export;
@@ -126,13 +128,13 @@ class Library
         importLibDataPug( input );
     }
 	
-	public function importBitmap( id:String, img:IMAGEDATA ):Void {
+	public function importBitmap( id:String, img:FILEDATA ):Void {
 		var duplicate:Symbol = get( id );
 		if ( duplicate != null ) {
 			if ( Std.is( duplicate, SymbolImage ) )
-				cast( duplicate, SymbolImage ).updateBitmap( img.bmd, img.compressed );
+				cast( duplicate, SymbolImage ).updateBitmap( img.bmd, img );
 		} else
-			symbols.push( new SymbolImage( id, img.bmd, 0, 0, 1, img.compressed ) );
+			symbols.push( new SymbolImage( id, img.bmd, 0, 0, 1, img ) );
 	}
 	
 	public function importSVG( id:String, svg:String ):Void {
@@ -141,7 +143,13 @@ class Library
 			if ( Std.is( duplicate, SymbolShape ) )
 				cast( duplicate, SymbolShape ).updateSVG( svg );
 		} else
-			symbols.push( new SymbolShape( id, svg ) );
+			symbols.push( new SymbolShape( id, svg, {
+				name: id,
+				bmd: null,
+				string: svg,
+				bytes: null,
+				crc: Int32.ofInt( 0 )
+			}) );
 	}
 
     public static function BAtoBytes( ba:ByteArray ):Bytes {

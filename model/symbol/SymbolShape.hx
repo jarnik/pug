@@ -9,6 +9,7 @@ import pug.model.faxe.DisplayNode;
 import pug.model.faxe.ParserSVG;
 import pug.model.Library;
 import pug.model.symbol.ISymbolSub;
+import haxe.Int32;
 
 class SymbolShape extends Symbol
 {
@@ -16,13 +17,15 @@ class SymbolShape extends Symbol
 	public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):Symbol {
         var id:String = xml.get("id");
 		var filename:String = xml.get( "data" );
-		return new SymbolShape( id, libData.svgs.get( id ) );
+		return new SymbolShape( id, libData.svgs.get( id ).string, libData.svgs.get( id ) );
     }
 	
 	public var svgRoot:DisplayNode;
 	public var svg:String;
+	private var file:FILEDATA;
 	
-	public function new ( id:String, svg:String ) {
+	public function new ( id:String, svg:String, file:FILEDATA ) {
+		this.file = file;
 		super( id );
 		updateSVG( svg );
 	}
@@ -71,11 +74,10 @@ class SymbolShape extends Symbol
 		var xml:Xml = export.xml;
 		xml.nodeName = "symbolShape";
 		var filename:String = id+".svg";
-		xml.set( "data", filename );			
-		export.files.push( {
-			name: filename,
-			bytes: getSVGBytes()
-		} );
+		xml.set( "data", filename );	
+		file.name = filename;
+		file.bytes = getSVGBytes();
+		export.files.push( file );
 		return export;
 	}
 	

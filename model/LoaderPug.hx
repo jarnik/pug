@@ -10,6 +10,7 @@ import haxe.io.Bytes;
 import nme.events.Event;
 import nme.utils.ByteArray;
 import pug.model.symbol.SymbolImage;
+import haxe.Int32;
 
 import hsl.haxe.DirectSignaler;
 
@@ -20,7 +21,8 @@ import neko.zip.Reader;
 
 typedef LOADCONTENT = {
 	loader: Loader,
-	content: Bytes
+	content: Bytes,
+	crc: Int32
 }
 
 /**
@@ -45,7 +47,7 @@ class LoaderPug
 	private function resetLoading():Void {
         filesToLoad = 0;
         filesLoaded = 0;
-		libData = { xml:null, images: new Hash<IMAGEDATA>(), svgs: new Hash<String>() };
+		libData = { xml:null, images: new Hash<FILEDATA>(), svgs: new Hash<FILEDATA>() };
         loadImagesLoaders = new Hash<LOADCONTENT>();
     }
 	
@@ -89,11 +91,17 @@ class LoaderPug
             id = f.fileName.substr( 0, f.fileName.length - 4 );
             switch ( extension ) {
                 case "png":
-                    loadImage( id, f.data );
+                    loadImage( id, f.data, f.crc32 );
                 case "xml":
                     libData.xml = Xml.parse( f.data.toString() );
 				case "svg":
-					libData.svgs.set( id, f.data.toString() );	
+					libData.svgs.set( id, {
+						name: id, 
+						bmd: null,
+						string: f.data.toString(),
+						bytes: f.data,
+						crc: f.crc32
+					});	
 					filesLoaded++;        
             }
         }
@@ -108,10 +116,10 @@ class LoaderPug
         return ba;
     }
 	
-	private function loadImage( id:String, bytes:Bytes ):Void {
+	private function loadImage( id:String, bytes:Bytes, crc:Int32 ):Void {
         var loader:Loader = new Loader();
 		loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onImageLoaderComplete );
-        loadImagesLoaders.set( id, { loader: loader, content: bytes } );        
+        loadImagesLoaders.set( id, { loader: loader, content: bytes, crc: crc } );        
 		var ba:ByteArray;
         #if flash
         ba = bytes.getData();
@@ -130,7 +138,13 @@ class LoaderPug
         for ( id in loadImagesLoaders.keys() ) {
             if ( loadImagesLoaders.get( id ).loader == loader ) {
                 //trace("A-HA! this is a "+id+" "+cast( loader.content, Bitmap ).bitmapData );
-				libData.images.set( id, { bmd:bitmapData, compressed: loadImagesLoaders.get( id ).content } );
+				libData.images.set( id, { 
+					name: id,
+					bmd: bitmapData, 
+					string: null,
+					bytes: loadImagesLoaders.get( id ).content,
+					crc: loadImagesLoaders.get( id ).crc
+				} );
                 break;
             }
         }

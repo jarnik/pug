@@ -1,5 +1,6 @@
 package pug.model.symbol;
 
+import haxe.Int32;
 import haxe.io.Bytes;
 import nme.geom.Point;
 import nme.geom.Rectangle;
@@ -18,8 +19,8 @@ class SymbolImage extends Symbol
 		var fc:Int = 0;
 		if ( xml.get("frames") != null )
 			fc = Std.parseInt( xml.get("frames") );
-		var imgdata:IMAGEDATA = libData.images.get( id );
-        return new SymbolImage( id, imgdata.bmd, fw, fh, fc, imgdata.compressed );
+		var file:FILEDATA = libData.images.get( id );
+        return new SymbolImage( id, file.bmd, fw, fh, fc, file );
     }
 	
 	public static function BAtoBytes( ba:ByteArray ):Bytes {
@@ -35,9 +36,9 @@ class SymbolImage extends Symbol
 	public var frameWidth:Int;
 	
 	private var dirty:Bool;
-	private var compressed:Bytes;
+	private var file:FILEDATA;
 
-	public function new ( id:String, bmd:BitmapData, frameWidth:Int = 0, frameHeight:Int = 0, frameCount:Int = 0, compressed:Bytes = null ) {
+	public function new ( id:String, bmd:BitmapData, frameWidth:Int = 0, frameHeight:Int = 0, frameCount:Int = 0, file:FILEDATA = null ) {
 		super( id );
 		
 		if ( frameWidth == 0 || frameHeight == 0 ) {
@@ -45,8 +46,8 @@ class SymbolImage extends Symbol
 			frameHeight = bmd.height;
 		}
 		
-		this.compressed = compressed;
-		dirty = ( compressed == null );
+		this.file = file;
+		dirty = Int32.isZero( file.crc );
 		
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
@@ -56,20 +57,20 @@ class SymbolImage extends Symbol
 	}
 
 	private function getPNGBytes():Bytes {
-		var bitmapData:BitmapData = getFullCanvas();
-		
 		if ( !dirty )
-			return compressed;
-			
+			return file.bytes;
+		
+		var bitmapData:BitmapData = getFullCanvas();
 		dirty = false;
 		
         #if flash
-			compressed = BAtoBytes( PNGEncoder.encode( bitmapData ) );
+			file.bytes = BAtoBytes( PNGEncoder.encode( bitmapData ) );
+			file.crc = format.tools.CRC32.encode( file.bytes );
 		#else
-			compressed = bitmapData.encode("png", 1);
+			file.bytes = bitmapData.encode("png", 1);
 		#end
 		
-		return compressed;
+		return file.bytes;
     }
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
@@ -81,15 +82,15 @@ class SymbolImage extends Symbol
 		xml.set( "frameWidth", Std.string( frameWidth ) );
 		xml.set( "frameHeight", Std.string( frameHeight ) );
 		xml.set( "frames", Std.string( frames.length ) );
-        export.files.push( {
-            name: filename,
-            bytes: getPNGBytes()
-        } );
+		file.name = filename;
+		file.bytes = getPNGBytes();
+		export.files.push( file );
 		
 		return export;
 	}
 	
-	public function updateBitmap( bmd:BitmapData, compressed:Bytes = null ):Void {
+	public function updateBitmap( bmd:BitmapData, file:FILEDATA = null ):Void {
+		this.file = file;
 		setDirty();
 		parseFrames( bmd );
 	}
