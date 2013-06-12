@@ -70,9 +70,11 @@ class RenderGroup extends Render
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
         clear();
 		
+		var innerFrame:Int = frame;
+		
 		if ( !infinite ) {
-			frame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
-			frame = frame % frameCount;
+			innerFrame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
+			innerFrame = innerFrame % frameCount;
 		}
 		
 		var r:Render;
@@ -80,7 +82,7 @@ class RenderGroup extends Render
         var f:Int;
 		for ( i in 0...group.children.length ) {
             e = group.children[ i ];
-			if ( !isVisible( e, frame ) || !e.renderable )
+			if ( !isVisible( e, innerFrame ) || !e.renderable )
 				continue;
 			r = cachedInstances.get( e.id );
             if ( r == null ) {
@@ -88,7 +90,7 @@ class RenderGroup extends Render
                 cachedInstances.set( e.id, r );
             }
 			addChild( r );
-            f = frame - e.frameStart;
+            f = innerFrame - e.frameStart;
 			if ( r.renderUpdatesEnabled )
 				r.render( f );
 		}
