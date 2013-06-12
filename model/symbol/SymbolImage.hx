@@ -18,10 +18,11 @@ class SymbolImage extends Symbol
 		var fc:Int = 0;
 		if ( xml.get("frames") != null )
 			fc = Std.parseInt( xml.get("frames") );
-        return new SymbolImage( id, libData.images.get( id ), fw, fh, fc );
+		var imgdata:IMAGEDATA = libData.images.get( id );
+        return new SymbolImage( id, imgdata.bmd, fw, fh, fc, imgdata.compressed );
     }
 	
-	private function BAtoBytes( ba:ByteArray ):Bytes {
+	public static function BAtoBytes( ba:ByteArray ):Bytes {
 		var b:Bytes = Bytes.alloc( ba.length );
 		ba.position = 0;
 		for ( i in 0...ba.length )
@@ -32,14 +33,20 @@ class SymbolImage extends Symbol
     public var frames:Array<BitmapData>;
 	public var frameHeight:Int;
 	public var frameWidth:Int;
+	
+	private var dirty:Bool;
+	private var compressed:Bytes;
 
-	public function new ( id:String, bmd:BitmapData, frameWidth:Int = 0, frameHeight:Int = 0, frameCount:Int = 0 ) {
+	public function new ( id:String, bmd:BitmapData, frameWidth:Int = 0, frameHeight:Int = 0, frameCount:Int = 0, compressed:Bytes = null ) {
 		super( id );
 		
 		if ( frameWidth == 0 || frameHeight == 0 ) {
 			frameWidth = bmd.width;
 			frameHeight = bmd.height;
 		}
+		
+		this.compressed = compressed;
+		dirty = ( compressed == null );
 		
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
@@ -51,13 +58,18 @@ class SymbolImage extends Symbol
 	private function getPNGBytes():Bytes {
 		var bitmapData:BitmapData = getFullCanvas();
 		
+		if ( !dirty )
+			return compressed;
+			
+		dirty = false;
+		
         #if flash
-			var data:ByteArray = PNGEncoder.encode( bitmapData );
-			return BAtoBytes( data );
+			compressed = BAtoBytes( PNGEncoder.encode( bitmapData ) );
 		#else
-			var data:ByteArray = bitmapData.encode("png", 1);
-			return data;
+			compressed = bitmapData.encode("png", 1);
 		#end
+		
+		return compressed;
     }
 	
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
@@ -77,8 +89,13 @@ class SymbolImage extends Symbol
 		return export;
 	}
 	
-	public function updateBitmap( bmd:BitmapData ):Void {
+	public function updateBitmap( bmd:BitmapData, compressed:Bytes = null ):Void {
+		setDirty();
 		parseFrames( bmd );
+	}
+	
+	public function setDirty():Void {
+		dirty = true;
 	}
    
 	private function parseFrames( bmd:BitmapData, frameCount:Int = 0 ):Void {

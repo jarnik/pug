@@ -13,9 +13,14 @@ import hsl.haxe.DirectSignaler;
 import haxe.io.Bytes;
 import haxe.io.Input;
 
+typedef IMAGEDATA = {
+	bmd: BitmapData,
+	compressed: Bytes
+}
+
 typedef LIB_DATA = {
     xml:Xml,
-    images:Hash<BitmapData>,
+    images:Hash<IMAGEDATA>,
 	svgs:Hash<String>
 }
 
@@ -121,13 +126,13 @@ class Library
         importLibDataPug( input );
     }
 	
-	public function importBitmap( id:String, bmd:BitmapData ):Void {
+	public function importBitmap( id:String, img:IMAGEDATA ):Void {
 		var duplicate:Symbol = get( id );
 		if ( duplicate != null ) {
 			if ( Std.is( duplicate, SymbolImage ) )
-				cast( duplicate, SymbolImage ).updateBitmap( bmd );
+				cast( duplicate, SymbolImage ).updateBitmap( img.bmd, img.compressed );
 		} else
-			symbols.push( new SymbolImage( id, bmd ) );
+			symbols.push( new SymbolImage( id, img.bmd, 0, 0, 1, img.compressed ) );
 	}
 	
 	public function importSVG( id:String, svg:String ):Void {

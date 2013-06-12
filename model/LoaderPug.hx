@@ -9,6 +9,7 @@ import pug.model.Library;
 import haxe.io.Bytes;
 import nme.events.Event;
 import nme.utils.ByteArray;
+import pug.model.symbol.SymbolImage;
 
 import hsl.haxe.DirectSignaler;
 
@@ -16,6 +17,11 @@ import hsl.haxe.DirectSignaler;
 import sys.io.FileInput;
 import neko.zip.Reader;
 #end
+
+typedef LOADCONTENT = {
+	loader: Loader,
+	content: Bytes
+}
 
 /**
  * ...
@@ -27,7 +33,7 @@ class LoaderPug
 	
 	private var filesToLoad:Int;
     private var filesLoaded:Int;
-    private var loadImagesLoaders:Hash<Loader>;
+    private var loadImagesLoaders:Hash<LOADCONTENT>;
 	private var libData:LIB_DATA;
 	private var input:Input;
 
@@ -39,8 +45,8 @@ class LoaderPug
 	private function resetLoading():Void {
         filesToLoad = 0;
         filesLoaded = 0;
-		libData = { xml:null, images: new Hash<BitmapData>(), svgs: new Hash<String>() };
-        loadImagesLoaders = new Hash<Loader>();
+		libData = { xml:null, images: new Hash<IMAGEDATA>(), svgs: new Hash<String>() };
+        loadImagesLoaders = new Hash<LOADCONTENT>();
     }
 	
 	public function importLibDataPug( input:Input ):Void {
@@ -105,7 +111,7 @@ class LoaderPug
 	private function loadImage( id:String, bytes:Bytes ):Void {
         var loader:Loader = new Loader();
 		loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onImageLoaderComplete );
-        loadImagesLoaders.set( id, loader );        
+        loadImagesLoaders.set( id, { loader: loader, content: bytes } );        
 		var ba:ByteArray;
         #if flash
         ba = bytes.getData();
@@ -122,9 +128,9 @@ class LoaderPug
 		if ( Std.is( loader.content, Bitmap ) )
 			bitmapData = cast( loader.content, Bitmap ).bitmapData;
         for ( id in loadImagesLoaders.keys() ) {
-            if ( loadImagesLoaders.get( id ) == loader ) {
+            if ( loadImagesLoaders.get( id ).loader == loader ) {
                 //trace("A-HA! this is a "+id+" "+cast( loader.content, Bitmap ).bitmapData );
-                libData.images.set( id, bitmapData );
+				libData.images.set( id, { bmd:bitmapData, compressed: loadImagesLoaders.get( id ).content } );
                 break;
             }
         }
