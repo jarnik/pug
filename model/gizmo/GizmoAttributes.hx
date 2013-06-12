@@ -1,6 +1,7 @@
 package pug.model.gizmo;
 import pug.model.param.Param;
 import pug.model.value.ValueAngle;
+import pug.model.value.ValueBool;
 import pug.model.value.ValueFloat;
 import pug.model.value.ValueFrame;
 import pug.model.value.ValueScale;
@@ -15,6 +16,7 @@ class GizmoAttributes extends Gizmo
 	public var paramFrame:Param;
 	public var paramAlpha:Param;
 	public var paramTintColor:Param;
+	public var paramSmoothing:Param;
 
 	public function new() 
 	{
@@ -23,7 +25,8 @@ class GizmoAttributes extends Gizmo
 			[
 				paramFrame = new Param( "Frame",[ new ValueFrame() ] ),
 				paramAlpha = new Param( "Alpha",[ new ValueFloat( 1 ) ] ),
-				paramTintColor = new Param( "Tint Color",[ new ValueColor() ] )
+				paramTintColor = new Param( "Tint Color",[ new ValueColor() ] ),
+				paramSmoothing = new Param( "Smoothing",[ new ValueBool() ] )
 			]
 		);
 	}

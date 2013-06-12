@@ -29,10 +29,15 @@ class RenderImage extends Render
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
 		var imageFrame:Int = frame;
-		if ( effect != null )
+		if ( effect != null ) {
 			imageFrame = effect.gizmoAttributes.params[ 0 ].getValues( frame )[ 0 ];
+		}
 		imageFrame = Std.int( imageFrame % image.frames.length );
 		bitmap.bitmapData = image.frames[ imageFrame ];
+		if ( effect != null ) {
+			var smoothing:Array<Dynamic> = effect.gizmoAttributes.paramSmoothing.getValues( frame );
+			bitmap.smoothing = smoothing[ 0 ];
+		}
 		super.render( frame, applyTransforms );
 	}
 	
