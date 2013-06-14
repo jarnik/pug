@@ -59,6 +59,13 @@ class Render extends Sprite
 		return null;
 	}
 	
+	public static function renderSymbolByName( id:String, lib:Library = null, state:String = null ):Render {
+		if ( lib == null )
+			lib = Library.lib;
+		var r:Render = renderSymbol( lib.get( id ) );
+		return r;
+	}
+	
 	public static function renderGroupStates( id:String, lib:Library = null, state:String = null ):RenderGroupStates {
 		if ( lib == null )
 			lib = Library.lib;

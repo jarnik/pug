@@ -121,8 +121,8 @@ class RenderGroup extends Render
 			return;
 		
         r.x = 0; r.y = 0;
-        r.width = ( manualAlignRange == null ) ? r.width : alignmentSize.width;
-        r.height = ( manualAlignRange == null ) ? r.height : alignmentSize.height;
+        r.width = ( manualAlignRange != null ) ? r.width : alignmentSize.width;
+        r.height = ( manualAlignRange != null ) ? r.height : alignmentSize.height;
 
 		var kid:Render;
         var e:Effect;
