@@ -142,7 +142,7 @@ class Render extends Sprite
 			applyAttributes( effect.gizmoAttributes, this, frame );			
 		}
 		if ( manualAlignRange != null && effect != null )
-			align( manualAlignRange, frame );
+			align( manualAlignRange.clone(), frame );
 	}
 	
 	public function renderSubElements( frame:Int ):Void {
