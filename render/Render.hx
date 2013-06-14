@@ -218,6 +218,7 @@ class Render extends Sprite
 					x = r.x + (r.width - alignmentSize.width) / 2;
 				case "stretch":
 					x = r.x;
+					width = r.width;
 					alignmentSize.width = r.width;
 				default:
 			}
@@ -231,6 +232,7 @@ class Render extends Sprite
 					y = r.y + (r.height - alignmentSize.height) / 2;
 				case "stretch":
 					y = r.y;
+					height = r.height;
 					alignmentSize.height = r.height;
 				default:                    
 			}
