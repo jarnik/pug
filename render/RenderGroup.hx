@@ -77,6 +77,8 @@ class RenderGroup extends Render
 			innerFrame = innerFrame % frameCount;
 		}
 		
+		updatePivot();		
+		
 		var r:Render;
         var e:Effect;
         var f:Int;
@@ -91,8 +93,11 @@ class RenderGroup extends Render
             }
 			addChild( r );
             f = innerFrame - e.frameStart;
-			if ( r.renderUpdatesEnabled )
+			if ( r.renderUpdatesEnabled ) {
 				r.render( f );
+				r.x -= pivot.x;
+				r.y -= pivot.y;
+			}
 		}
 		
 		var s:DisplayObject;

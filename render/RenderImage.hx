@@ -38,6 +38,9 @@ class RenderImage extends Render
 			var smoothing:Array<Dynamic> = effect.gizmoAttributes.paramSmoothing.getValues( frame );
 			bitmap.smoothing = smoothing[ 0 ];
 		}
+		updatePivot();
+		bitmap.x = - pivot.x;
+		bitmap.y = - pivot.y;
 		super.render( frame, applyTransforms );
 	}
 	

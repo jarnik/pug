@@ -49,7 +49,6 @@ class RenderText extends Render
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
-        super.render( frame, applyTransforms );
 		var et:EffectText = cast( effect, EffectText );
 		var font:Array<Dynamic> = et.gizmoText.paramFont.getValues( frame );		
 		var size:Array<Dynamic> = et.gizmoText.paramSize.getValues( frame );		
@@ -69,6 +68,10 @@ class RenderText extends Render
 		if ( tf.text != text && fixedLabel == null )
 			tf.text = text;
 		tf.setTextFormat( format );
+		updatePivot();
+		tf.x = - pivot.x;
+		tf.y = - pivot.y;
+		super.render( frame, applyTransforms );
 	}
 	
 }

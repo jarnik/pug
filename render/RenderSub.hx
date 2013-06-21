@@ -59,6 +59,11 @@ class RenderSub extends Render
 	public override function render( frame:Int, applyTransforms:Bool = true ):Void {
 		super.render( frame, applyTransforms );
 		updateSub();
+		if ( s != null ) {
+			updatePivot();
+			s.x = - pivot.x;
+			s.y = - pivot.y;
+		}
 	}
 	
 	public override function getFixedSize():Rectangle {

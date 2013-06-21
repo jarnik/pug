@@ -37,6 +37,9 @@ class RenderShape extends Render
 	
 	public override function render( frame:Int, applyTransforms:Bool = true ):Void {
 		super.render( frame, applyTransforms );
+		updatePivot();
+		sprite.x = - pivot.x;
+		sprite.y = - pivot.y;
 		renderSubElements( frame );
 	}
 	

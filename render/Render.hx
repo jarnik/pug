@@ -99,7 +99,7 @@ class Render extends Sprite
         }
 		return null;
 	}
-
+	
 	private static function applyTransform( g:GizmoTransform, d:DisplayObject, frame:Int = 0 ):Void {
 		var position:Array<Dynamic> = g.paramPosition.getValues( frame );
 		var rot:Array<Dynamic> = g.paramRotation.getValues( frame );
@@ -123,6 +123,7 @@ class Render extends Sprite
 	public var frameCount:Int;
 	public var manualAlignRange:Rectangle;
 	public var alignmentSize:Rectangle;
+	public var pivot:Point;
 	private var onFinishedCallback:Dynamic;
 	
 	public function new( effect:Effect ) 
@@ -132,15 +133,25 @@ class Render extends Sprite
 		this.effect = effect;
 		frameCount = 1;
 		infinite = false;
+		pivot = new Point();
 		if ( effect != null )
 			name = effect.id;
+	}
+	
+	public function updatePivot( frame:Int = 0 ):Void {
+		if ( effect == null )
+			return;
+		var pivot:Array<Dynamic> = effect.gizmoTransform.paramPivot.getValues( frame );
+		this.pivot.x = pivot[0];
+		this.pivot.y = pivot[1];
 	}
 	
 	public function render( frame:Int, applyTransforms:Bool = true ):Void {
 		if ( effect != null && applyTransforms ) {
 			applyTransform( effect.gizmoTransform, this, frame );
-			applyAttributes( effect.gizmoAttributes, this, frame );			
+			applyAttributes( effect.gizmoAttributes, this, frame );	
 		}
+		
 		if ( manualAlignRange != null && effect != null )
 			align( manualAlignRange.clone(), frame );
 	}
