@@ -36,6 +36,19 @@ class ParserSVG
         var root:IDisplayNode = parseElement( DisplayGroup( data ), 2 );
         return root;
     }
+	
+	/*
+	 
+	Add to SVGData.loadGroup to allow multiple same IDs via tags:
+	
+	 else if (inG.exists ("tag")) {
+			
+			g.name = inG.get ("tag");
+			
+		}  
+	
+	
+	 * */
 
     private static function parseElement( de:DisplayElement, forcedSizeLevel:Int = 0 ):IDisplayNode {
         var e:IDisplayNode = null;
