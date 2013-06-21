@@ -35,6 +35,7 @@ class RenderSub extends Render
 			removeChild( s );
 		cached_path = sub.source + "_" + sub.path;
 		
+		size = new Rectangle( 0, 0, 0, 0 );
 		var symbol:Symbol = Library.lib.get( sub.source );
 		if ( symbol != null ) {
 			var asset:SUBASSET = symbol.fetchSymbolSub( sub.path );
