@@ -14,7 +14,7 @@ class SymbolLayerState implements IEffectGroup
         var id:String = xml.get("id");
         var s:SymbolLayerState = new SymbolLayerState( id );
         if ( xml.get("frames") != null )
-            s.frameCount = Std.parseInt( xml.get("frames") );
+            s.setFrameCount( Std.parseInt( xml.get("frames") ) );
 		
 		var e:Effect;
         for ( x in xml.elements() ) {
@@ -29,7 +29,7 @@ class SymbolLayerState implements IEffectGroup
     }
 	
 	public var children:Array<Effect>;
-    public var frameCount:Int;
+    private var frameCount:Int;
 	public var parentSymbol:SymbolLayer;
 	public var parent:IEffectGroup;
 	public var name:String;
@@ -77,6 +77,14 @@ class SymbolLayerState implements IEffectGroup
 		children.insert( level, e );
 		for ( i in 0...children.length )
 			children[ i ].level = i;
+	}
+	
+	public function getFrameCount():Int {
+		return frameCount;
+	}
+	
+	public function setFrameCount( f:Int ):Void {
+		frameCount = f;
 	}
 	
 }

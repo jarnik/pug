@@ -38,7 +38,7 @@ class RenderGroupStates extends RenderGroup
 		if ( cached != null ) {
 			cachedInstances = cached.cachedInstances;
 			group = cached.group;
-			frameCount = group.frameCount;
+			frameCount = group.getFrameCount();
 			currentState = newState;
 		} else {
 			var state:SymbolLayerState = cast( cast( effect, EffectSymbolLayer ).symbol, SymbolLayer ).states.get( newState );
@@ -62,7 +62,7 @@ class RenderGroupStates extends RenderGroup
 		var state:String = cast( effect, EffectSymbolLayer ).gizmoAttributes.params[ 3 ].getValues( frame )[ 0 ];
 		if ( currentState != state && applyTransforms )
 			switchState( state );
-		frameCount = group.frameCount;
+		frameCount = group.getFrameCount();
 		super.render( frame, applyTransforms );
 	}
 	

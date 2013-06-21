@@ -12,7 +12,7 @@ class EffectGroup extends Effect, implements IEffectGroup
         var g:EffectGroup = new EffectGroup();
         var e:Effect = null;
         if ( xml.get("frames") != null )
-            g.frameCount = Std.parseInt( xml.get("frames") );
+            g.setFrameCount( Std.parseInt( xml.get("frames") ) );
 
         for ( x in xml.elements() ) {
             e = Effect.parse( x, l, libData );
@@ -24,13 +24,12 @@ class EffectGroup extends Effect, implements IEffectGroup
     }
 
 	public var children:Array<Effect>;
-    public var frameCount:Int;
+    //private var frameCount:Int;
 
 	public function new() 
 	{
 		super( [] );
         id = "group"+Math.floor(Math.random()*1000);
-        frameCount = 1;
 		children = [];
 	}
 
@@ -49,7 +48,7 @@ class EffectGroup extends Effect, implements IEffectGroup
 	override public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		export = super.export( export );
         export.xml.nodeName = "group";
-        export.xml.set("frames",Std.string(frameCount));
+        export.xml.set("frames",Std.string( getFrameCount() ));
 		var xml:Xml = Xml.createElement("children");        
         var child_export:EXPORT_PUG = { xml:null, files: export.files };
         for ( e in children ) {
@@ -73,10 +72,18 @@ class EffectGroup extends Effect, implements IEffectGroup
 	
 	override public function copy( e:Effect ):Void {
 		super.copy( e ); 
-		cast( e, EffectGroup ).frameCount = frameCount;
+		cast( e, EffectGroup ).setFrameCount( getFrameCount() );
 		var childClone:Effect;
 		for ( c in cast( e, EffectGroup ).children ) {
 			addChild( Effect.createClone( c ) );
 		}
+	}
+	
+	public function getFrameCount():Int {
+		return frameLength;
+	}
+	
+	public function setFrameCount( f:Int ):Void {
+		frameLength = f;
 	}
 }

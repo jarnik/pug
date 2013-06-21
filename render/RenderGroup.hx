@@ -31,7 +31,7 @@ class RenderGroup extends Render
 	private function loadGroup( group:IEffectGroup ):Void {
 		this.group = group;
 		cachedInstances = new Hash<Render>();
-		frameCount = group.frameCount;
+		frameCount = group.getFrameCount();
 	}
 	
 	private function clear():Void {
