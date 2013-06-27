@@ -41,7 +41,7 @@ class RenderGroup extends Render
 	}
 
     public function addSticker( id:String, sprite:DisplayObject ):Void {
-        stickers.set( id+"===ADD", ADD( sprite ) );
+        stickers.set( id+"===ADD_"+sprite.name, ADD( sprite ) );
     }
 	
 	public function addStickerHideRenders( id:String ):Void {
