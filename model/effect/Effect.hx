@@ -26,6 +26,8 @@ class Effect
                     return null;
 				if ( xml.get("groupFrames") != null )
 					cast( e, EffectGroup ).groupFrames = Std.parseInt( xml.get("groupFrames") );
+				if ( xml.get("fps") != null )
+					cast( e, EffectGroup ).fps = Std.parseFloat( xml.get("fps") );
             case "symbol":            
                 var s:Symbol = l.get( xml.get("use") );
                 if ( s == null ) 

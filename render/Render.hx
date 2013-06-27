@@ -264,13 +264,15 @@ class Render extends Sprite
 		}
 	}
 	
-	public function play( loop:Bool = false, fps:Float = 30, state:String = null, onFinishedCallback:Dynamic = null ):Void {
+	public function play( loop:Bool = false, fps:Float = 0, state:String = null, onFinishedCallback:Dynamic = null ):Void {
 		if ( player == null ) {
 			player = new Player();
 			player.onSetFrame.bind( onSetFrame );
 		}
 		this.onFinishedCallback = onFinishedCallback;
 		onSetFrame( 0 );
+		if ( fps == 0 )
+			fps = 30;
 		player.play( loop, fps );
 	}
 	

@@ -23,6 +23,7 @@ class EffectGroup extends Effect, implements IEffectGroup
 
 	public var children:Array<Effect>;
     public var groupFrames:Int;
+    public var fps:Float;
 
 	public function new() 
 	{
@@ -30,6 +31,7 @@ class EffectGroup extends Effect, implements IEffectGroup
         id = "group"+Math.floor(Math.random()*1000);
 		children = [];
 		groupFrames = 1;
+		fps = 30;
 	}
 
     public function addChild( e:Effect ):Void {
@@ -48,6 +50,7 @@ class EffectGroup extends Effect, implements IEffectGroup
 		export = super.export( export );
         export.xml.nodeName = "group";
         export.xml.set("groupFrames",Std.string( groupFrames ));
+        export.xml.set("fps",Std.string( fps ));
 		var xml:Xml = Xml.createElement("children");        
         var child_export:EXPORT_PUG = { xml:null, files: export.files };
         for ( e in children ) {

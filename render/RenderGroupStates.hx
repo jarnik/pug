@@ -51,7 +51,7 @@ class RenderGroupStates extends RenderGroup
 			render( 0, false );
 	}
 	
-	override public function play( loop:Bool = false, fps:Float = 30, state:String = null, onFinishedCallback:Dynamic = null ):Void {
+	override public function play( loop:Bool = false, fps:Float = 0, state:String = null, onFinishedCallback:Dynamic = null ):Void {
 		if ( state != null ) {
 			switchState( state );
 		}

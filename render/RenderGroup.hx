@@ -119,6 +119,12 @@ class RenderGroup extends Render
 		super.render( frame, applyTransforms );
 	}
 	
+	override public function play( loop:Bool = false, fps:Float = 0, state:String = null, onFinishedCallback:Dynamic = null ):Void {
+		if ( fps == 0 )
+			fps = group.fps;
+		super.play( loop, fps, state, onFinishedCallback );
+	}
+	
 	public override function align( r:Rectangle = null, frame:Int = 0 ):Void {
 		super.align( r, frame );
 		

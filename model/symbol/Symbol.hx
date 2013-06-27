@@ -35,7 +35,7 @@ class Symbol
         return s;
     }
 
-	public var id:String;
+	public var id:String;	
 	public var size:Rectangle;
 
 	public function new( id:String ) 
