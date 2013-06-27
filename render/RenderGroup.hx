@@ -31,7 +31,7 @@ class RenderGroup extends Render
 	private function loadGroup( group:IEffectGroup ):Void {
 		this.group = group;
 		cachedInstances = new Hash<Render>();
-		frameCount = group.getFrameCount();
+		frameCount = group.groupFrames;
 	}
 	
 	private function clear():Void {
@@ -159,8 +159,9 @@ class RenderGroup extends Render
 	
 	private function isVisible( e:Effect, frame:Int ):Bool { 
 		var isInfinite:Bool = stickers.exists(e.id+"===INFINITE");
-		if ( frame >= e.frameStart && 
-			( frame < e.frameStart + e.frameLength || isInfinite )
+		if ( 
+			( frame >= e.frameStart && frame < e.frameStart + e.frameLength ) // within range
+			|| ( isInfinite && frame >= frameCount - 1 )  // infinite and at the end of the parent
 		)
 			return true;
 		return false;

@@ -14,7 +14,7 @@ class SymbolLayerState implements IEffectGroup
         var id:String = xml.get("id");
         var s:SymbolLayerState = new SymbolLayerState( id );
         if ( xml.get("frames") != null )
-            s.setFrameCount( Std.parseInt( xml.get("frames") ) );
+            s.groupFrames = Std.parseInt( xml.get("frames") );
 		
 		var e:Effect;
         for ( x in xml.elements() ) {
@@ -29,7 +29,7 @@ class SymbolLayerState implements IEffectGroup
     }
 	
 	public var children:Array<Effect>;
-    private var frameCount:Int;
+    public var groupFrames:Int;
 	public var parentSymbol:SymbolLayer;
 	public var parent:IEffectGroup;
 	public var name:String;
@@ -37,7 +37,7 @@ class SymbolLayerState implements IEffectGroup
 	public function new( name:String ) {
 		children = [];
 		this.name = name;
-        frameCount = 1;
+        groupFrames = 1;
 	}
 	
 	public function addChild( e:Effect ):Void {        
@@ -62,7 +62,7 @@ class SymbolLayerState implements IEffectGroup
 	public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		var xml:Xml = Xml.createElement("state");
 		xml.set( "id", name );
-		xml.set( "frames", Std.string( frameCount ) );
+		xml.set( "frames", Std.string( groupFrames ) );
         var child_export:EXPORT_PUG;
         for ( c in children ) {
             child_export = c.export( export );
@@ -77,14 +77,6 @@ class SymbolLayerState implements IEffectGroup
 		children.insert( level, e );
 		for ( i in 0...children.length )
 			children[ i ].level = i;
-	}
-	
-	public function getFrameCount():Int {
-		return frameCount;
-	}
-	
-	public function setFrameCount( f:Int ):Void {
-		frameCount = f;
 	}
 	
 }
