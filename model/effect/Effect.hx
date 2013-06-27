@@ -24,6 +24,8 @@ class Effect
                 e = EffectGroup.parse( g, l, libData );
                 if ( e == null )
                     return null;
+				if ( xml.get("groupFrames") != null )
+					cast( e, EffectGroup ).groupFrames = Std.parseInt( xml.get("groupFrames") );
             case "symbol":            
                 var s:Symbol = l.get( xml.get("use") );
                 if ( s == null ) 

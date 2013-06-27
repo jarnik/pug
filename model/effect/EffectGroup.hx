@@ -11,8 +11,6 @@ class EffectGroup extends Effect, implements IEffectGroup
     public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):EffectGroup {
         var g:EffectGroup = new EffectGroup();
         var e:Effect = null;
-        if ( xml.get("groupFrames") != null )
-            g.groupFrames = Std.parseInt( xml.get("groupFrames") );
 
         for ( x in xml.elements() ) {
             e = Effect.parse( x, l, libData );
