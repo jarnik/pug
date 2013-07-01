@@ -1,5 +1,6 @@
 package pug.render;
 import nme.display.Bitmap;
+import nme.display.BitmapData;
 import nme.display.DisplayObject;
 import nme.display.Sprite;
 import nme.geom.Rectangle;
@@ -49,6 +50,14 @@ class RenderSub extends Render
 						s.x = 0;
 						s.y = 0;
 						size = n.fixedSize.clone();
+						if ( effect.cachedBitmap ) {
+							if ( effect.cachedBitmapData == null ) {
+								effect.cachedBitmapData = new BitmapData( Std.int( size.width ), Std.int( size.height ), true, 0x00000000 );
+								effect.cachedBitmapData.draw( s );
+							}
+							s = new Bitmap( effect.cachedBitmapData );
+							size = new Rectangle( 0, 0, effect.cachedBitmapData.width, effect.cachedBitmapData.height );
+						}
 				}
 				if ( s != null ) {
 					addChild( s );
@@ -64,7 +73,7 @@ class RenderSub extends Render
 			updatePivot();
 			s.x = - pivot.x;
 			s.y = - pivot.y;
-		}
+		}		
 	}
 	
 	public override function getFixedSize():Rectangle {

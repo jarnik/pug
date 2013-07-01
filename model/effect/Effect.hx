@@ -1,5 +1,6 @@
 package pug.model.effect;
 
+import nme.display.BitmapData;
 import pug.model.gizmo.Gizmo;
 import pug.model.gizmo.GizmoAlignment;
 import pug.model.gizmo.GizmoCanvas;
@@ -61,6 +62,8 @@ class Effect
 			e.frameLength = Std.parseInt( xml.get("frames") );
 		if ( xml.get("level") != null )
 			e.level = Std.parseInt( xml.get("level") );
+		if ( xml.get("cachedBitmap") != null )
+			e.cachedBitmap = (xml.get("cachedBitmap") == "true");
         var g:Gizmo;
         var gid:String;
         for ( x in xml.elementsNamed("gizmo") ) {
@@ -86,6 +89,8 @@ class Effect
 	public var level:Int;
 	public var id:String;
 	public var renderable:Bool;
+	public var cachedBitmap:Bool;
+	public var cachedBitmapData:BitmapData;
 	
 	public var gizmoTransform:GizmoTransform;
 	public var gizmoAttributes:GizmoAttributes;
@@ -102,6 +107,7 @@ class Effect
 		level = 0;
 		
 		renderable = true;
+		cachedBitmap = false;
 		refs = [];
 
         id = "effect"+Math.floor(Math.random()*1000);
@@ -117,6 +123,8 @@ class Effect
         xml.set("start", Std.string( frameStart ));
         xml.set("frames", Std.string( frameLength ));
         xml.set("level", Std.string( level ));
+		if ( cachedBitmap )
+			xml.set("cachedBitmap", "true" );
         var child_export:EXPORT_PUG;
         for ( g in gizmos ) {
             child_export = g.export( export );
