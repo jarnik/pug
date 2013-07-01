@@ -156,6 +156,10 @@ class Render extends Sprite
 			align( manualAlignRange.clone(), frame );
 	}
 	
+	public function forceCachedBitmap():Void {
+		// TODO
+	}
+	
 	public function renderSubElements( frame:Int ):Void {
 		var d:DisplayObject;
 		if ( effect != null )
