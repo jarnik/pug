@@ -9,6 +9,7 @@ import pug.model.effect.EffectSub;
 import pug.model.symbol.ISymbolSub;
 import pug.model.symbol.Symbol;
 import pug.model.Library;
+import nme.display.PixelSnapping;
 
 /**
  * ...
@@ -55,7 +56,7 @@ class RenderSub extends Render
 								effect.cachedBitmapData = new BitmapData( Std.int( size.width ), Std.int( size.height ), true, 0x00000000 );
 								effect.cachedBitmapData.draw( s );
 							}
-							s = new Bitmap( effect.cachedBitmapData );
+							s = new Bitmap( effect.cachedBitmapData, PixelSnapping.AUTO, true );
 							size = new Rectangle( 0, 0, effect.cachedBitmapData.width, effect.cachedBitmapData.height );
 						}
 				}
