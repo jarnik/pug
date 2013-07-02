@@ -224,6 +224,44 @@ class Render extends Sprite
 			var alignment:Array<Dynamic> = g.paramAlignment.getValues( frame );
 			var borders:Array<Dynamic> = g.paramBorders.getValues( frame );
 			
+			// fitting
+			if ( StringTools.startsWith( alignment[0], "fit" ) || StringTools.startsWith( alignment[1], "fit" ) ) {
+				var parentAspect:Float = ( r.width - borders[0] - borders[2] ) / ( r.height - borders[1] - borders[3] );
+				var mineAspect:Float = alignmentSize.width / alignmentSize.height;
+				var targetWidth:Float = alignmentSize.width;
+				if ( parentAspect < mineAspect ) {
+					targetWidth = r.width - borders[0] - borders[2];
+				} else {
+					targetWidth = ( r.height - borders[1] - borders[3] ) * mineAspect;
+				}
+				switch ( alignment[0] ) {
+					case "fit":
+					case "fitShrink":
+						targetWidth = Math.min( targetWidth, alignmentSize.width );
+					case "fitExpand":
+						targetWidth = Math.max( targetWidth, alignmentSize.width );
+					default:
+				}
+				switch ( alignment[1] ) {
+					case "fit":
+					case "fitShrink":
+						targetWidth = Math.min( targetWidth, alignmentSize.width );
+					case "fitExpand":
+						targetWidth = Math.max( targetWidth, alignmentSize.width );
+					default:
+				}
+				var scale:Float = targetWidth / alignmentSize.width;
+				scaleX = scale;
+				scaleY = scale;
+				alignmentSize.width *= scale;
+				alignmentSize.height *= scale;
+				if ( StringTools.startsWith( alignment[0], "fit" ) )
+					x = r.x + borders[ 0 ] + ( r.width - borders[0] - borders[2] - targetWidth ) / 2;
+				if ( StringTools.startsWith( alignment[1], "fit" ) )
+					y = r.y + borders[ 1 ] + ( r.height - borders[1] - borders[3] - targetWidth / mineAspect ) / 2;
+			}
+			
+			// alignment
 			switch ( alignment[0] ) {
 				case "min":
 					x = r.x + borders[ 0 ];
