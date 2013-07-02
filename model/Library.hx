@@ -1,6 +1,7 @@
 package pug.model;
 
-import haxe.Int32;
+//import haxe.Int;
+import haxe.crypto.Crc32;
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolShape;
@@ -19,13 +20,13 @@ typedef FILEDATA = {
 	bmd: BitmapData,
 	string: String,
 	bytes: Bytes,
-	crc: Int32
+	crc: Int
 }
 
 typedef LIB_DATA = {
     xml:Xml,
-    images:Hash<FILEDATA>,
-	svgs:Hash<FILEDATA>
+    images:Map<String,FILEDATA>,
+	svgs:Map<String,FILEDATA>
 }
 
 typedef EXPORT_PUG = {
@@ -70,12 +71,13 @@ class Library
 		
 		var str:StringBuf = new StringBuf();
 		XmlFormatter.stringify( xml, str, " " );
+		var data:Bytes = Bytes.ofString( str.toString() );
         export.files.push( {
             name: "pug.xml",
 			bmd: null,
 			string: null,
-            bytes: Bytes.ofString( str.toString() ),
-			crc: Int32.ofInt( 0 )
+            bytes: data,
+			crc: Crc32.make( data )
         } );
         export.xml = xml;
 		return export;
@@ -148,7 +150,7 @@ class Library
 				bmd: null,
 				string: svg,
 				bytes: null,
-				crc: Int32.ofInt( 0 )
+				crc: 0
 			}) );
 	}
 

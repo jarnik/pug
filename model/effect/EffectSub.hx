@@ -8,7 +8,7 @@ import pug.model.Library;
  * ...
  * @author Jarnik
  */
-class EffectSub extends Effect, implements ISymbolSub
+class EffectSub extends Effect implements ISymbolSub
 {
 	public var source:String;
 	public var path:String;

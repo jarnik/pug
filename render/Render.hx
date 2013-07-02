@@ -1,4 +1,5 @@
 package pug.render;
+
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
 import nme.geom.Point;

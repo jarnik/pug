@@ -7,7 +7,7 @@ import pug.model.symbol.SymbolLayer;
 import pug.model.symbol.SymbolLayerState;
 
 typedef CACHED_STATE = {
-	cachedInstances:Hash<Render>,
+	cachedInstances:Map<String,Render>,
 	group:IEffectGroup
 }
 
@@ -17,14 +17,14 @@ typedef CACHED_STATE = {
  */
 class RenderGroupStates extends RenderGroup
 {
-	private var cachedStates:Hash<CACHED_STATE>;
+	private var cachedStates:Map<String,CACHED_STATE>;
 	public var currentState:String;
 
 	public function new( e:EffectSymbolLayer ) {
 		var stateName:String = cast( e.symbol, SymbolLayer ).getFirstStateName();
 		var state:SymbolLayerState = cast( e.symbol, SymbolLayer ).states.get( stateName );
 		super( e, state );
-		cachedStates = new Hash<CACHED_STATE>();
+		cachedStates = new Map<String,CACHED_STATE>();
 		currentState = stateName;
 	}
 	

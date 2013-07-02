@@ -7,7 +7,7 @@ import pug.model.symbol.ISymbolSub;
  * ...
  * @author Jarnik
  */
-class SymbolSub extends Symbol, implements ISymbolSub {
+class SymbolSub extends Symbol implements ISymbolSub {
 	
 	public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):Symbol {
         var id:String = xml.get("id");

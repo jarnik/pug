@@ -6,7 +6,7 @@ import pug.model.Library;
 
 class SymbolLayer extends Symbol
 {
-	public var states:Hash<SymbolLayerState>;
+	public var states:Map<String,SymbolLayerState>;
 	
 	public static function getDefaultStateName():String {
 		return "main";
@@ -32,7 +32,7 @@ class SymbolLayer extends Symbol
 	public function new ( id:String ) 
 	{
 		super( id );
-        states = new Hash<SymbolLayerState>();
+        states = new Map<String,SymbolLayerState>();
 		//addState( getDefaultStateName() );
 	}
 	

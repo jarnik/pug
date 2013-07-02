@@ -1,6 +1,5 @@
 package pug.model.symbol;
 
-import haxe.Int32;
 import haxe.io.Bytes;
 import nme.geom.Point;
 import nme.geom.Rectangle;
@@ -47,7 +46,7 @@ class SymbolImage extends Symbol
 		}
 		
 		this.file = file;
-		dirty = Int32.isZero( file.crc );
+		dirty = ( file.crc == 0 );
 		
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
@@ -65,7 +64,8 @@ class SymbolImage extends Symbol
 		
         #if flash
 			file.bytes = BAtoBytes( PNGEncoder.encode( bitmapData ) );
-			file.crc = format.tools.CRC32.encode( file.bytes );
+			//file.crc = format.tools.CRC32.encode( file.bytes );
+			file.crc = haxe.crypto.Crc32.make( file.bytes );
 		#else
 			file.bytes = bitmapData.encode("png", 1);
 		#end
@@ -118,11 +118,11 @@ class SymbolImage extends Symbol
 				r.width = Math.min( frameWidth, bmd.width - r.x );
 				r.y = y * frameHeight;
 				r.height = Math.min( frameHeight, bmd.height - r.y );
-				#if !neko
+				//#if !neko
 				frame = new BitmapData( frameWidth, frameHeight, true, 0x00000000 );
-				#else
+				/*#else
 				frame = new BitmapData( frameWidth, frameHeight, true, { rgb: 0, a: 0 } );
-				#end
+				#end*/
 				frame.copyPixels( bmd, r, p );
 				frames.push( frame );
 				i++;
@@ -165,11 +165,11 @@ class SymbolImage extends Symbol
 		rows = Math.ceil( frames.length / cols );
 		
 		var bitmapData:BitmapData;
-		#if neko
+		/*#if neko
 			bitmapData = new BitmapData( cols * frameWidth, rows * frameHeight, true, { rgb: 0, a: 0 } );
-		#else
+		#else*/
 			bitmapData = new BitmapData( cols * frameWidth, rows * frameHeight, true, 0x00000000 );
-		#end
+		//#end
 		var r:Rectangle = new Rectangle( 0, 0, frameWidth, frameHeight );
 		var p:Point = new Point();
 		var i:Int = 0;

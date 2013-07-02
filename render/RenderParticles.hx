@@ -21,7 +21,7 @@ class RenderParticles extends Render
 
 	private var range:Rectangle;
     private var particles:Array<Particle>;
-    private var states:Hash<ParticleSystemState>;
+    private var states:Map<String,ParticleSystemState>;
     private var hash:String;
 	private var firstCachedFrame:Int;
 	private var lastBuiltFrame:Int;
@@ -79,7 +79,7 @@ class RenderParticles extends Render
             particles.push( p );
         }
 
-        states = new Hash<ParticleSystemState>();
+        states = new Map<String,ParticleSystemState>();
         computeState( 0 );
 		lastBuiltFrame = 0;
     }

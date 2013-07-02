@@ -1,6 +1,7 @@
 package pug.model;
 
 import haxe.io.Input;
+import haxe.zip.Entry;
 import nme.display.BitmapData;
 import nme.display.Bitmap;
 import nme.display.Loader;
@@ -10,19 +11,18 @@ import haxe.io.Bytes;
 import nme.events.Event;
 import nme.utils.ByteArray;
 import pug.model.symbol.SymbolImage;
-import haxe.Int32;
 
 import hsl.haxe.DirectSignaler;
 
 #if neko
 import sys.io.FileInput;
-import neko.zip.Reader;
+import haxe.zip.Reader;
 #end
 
 typedef LOADCONTENT = {
 	loader: Loader,
 	content: Bytes,
-	crc: Int32
+	crc: Int
 }
 
 /**
@@ -35,7 +35,7 @@ class LoaderPug
 	
 	private var filesToLoad:Int;
     private var filesLoaded:Int;
-    private var loadImagesLoaders:Hash<LOADCONTENT>;
+    private var loadImagesLoaders:Map<String,LOADCONTENT>;
 	private var libData:LIB_DATA;
 	private var input:Input;
 
@@ -47,15 +47,15 @@ class LoaderPug
 	private function resetLoading():Void {
         filesToLoad = 0;
         filesLoaded = 0;
-		libData = { xml:null, images: new Hash<FILEDATA>(), svgs: new Hash<FILEDATA>() };
-        loadImagesLoaders = new Hash<LOADCONTENT>();
+		libData = { xml:null, images: new Map<String,FILEDATA>(), svgs: new Map<String,FILEDATA>() };
+        loadImagesLoaders = new Map<String,LOADCONTENT>();
     }
 	
 	public function importLibDataPug( input:Input ):Void {
         this.input = input;
 		#if neko
 			var fp:Input = input;
-			var zipFiles:List<ZipEntry> = neko.zip.Reader.readZip( fp );
+			var zipFiles:List<Entry> = Reader.readZip( fp );
 			fp.close();
 			
 			var files:List<format.zip.Data.Entry> = new List<format.zip.Data.Entry>();
@@ -116,7 +116,7 @@ class LoaderPug
         return ba;
     }
 	
-	private function loadImage( id:String, bytes:Bytes, crc:Int32 ):Void {
+	private function loadImage( id:String, bytes:Bytes, crc:Int ):Void {
         var loader:Loader = new Loader();
 		loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onImageLoaderComplete );
         loadImagesLoaders.set( id, { loader: loader, content: bytes, crc: crc } );        

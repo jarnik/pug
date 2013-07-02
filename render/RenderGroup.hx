@@ -17,20 +17,20 @@ enum STICKER {
  */
 class RenderGroup extends Render
 {
-    public var cachedInstances:Hash<Render>;
-    public var stickers:Hash<STICKER>;
+    public var cachedInstances:Map<String,Render>;
+    public var stickers:Map<String,STICKER>;
 	public var group:IEffectGroup;	
 
 	public function new( effect:Effect, group:IEffectGroup ) 
 	{
 		super( effect );
-		stickers = new Hash<STICKER>();
+		stickers = new Map<String,STICKER>();
 		loadGroup( group );
 	}
 	
 	private function loadGroup( group:IEffectGroup ):Void {
 		this.group = group;
-		cachedInstances = new Hash<Render>();
+		cachedInstances = new Map<String,Render>();
 		frameCount = group.groupFrames;
 	}
 	

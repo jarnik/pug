@@ -3,13 +3,13 @@ package pug.model.symbol;
 import format.svg.Path;
 import format.gfx.GfxExtent;
 import format.svg.RenderContext;
+import haxe.crypto.Crc32;
 import haxe.io.Bytes;
 import nme.display.DisplayObject;
 import pug.model.faxe.DisplayNode;
 import pug.model.faxe.ParserSVG;
 import pug.model.Library;
 import pug.model.symbol.ISymbolSub;
-import haxe.Int32;
 
 class SymbolShape extends Symbol
 {
@@ -33,6 +33,7 @@ class SymbolShape extends Symbol
 	public function updateSVG( svg:String ):Void {
 		this.svg = svg;
 		svgRoot = cast( ParserSVG.parse( svg ), DisplayNode );
+		file.crc = Crc32.make( Bytes.ofString( svg ) );
 	}
 	
 	public override function fetchSymbolSub( path:String ):SUBASSET {
