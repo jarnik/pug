@@ -66,22 +66,22 @@ class PNGEncoder {
 		for(i in 0...img.height) {
 			// no filter
 			IDAT.writeByte(0);
-			var p:UInt;
+			var p:Int;
 			//var j:Int;
 			if ( !img.transparent ) {
 				//for(j=0;j < img.width;j++) {
 				for(j in 0...img.width) {
 					p = img.getPixel(j,i);
 					IDAT.writeUnsignedInt(
-						cast(((p&0xFFFFFF) << 8)|0xFF, UInt));
+						cast(((p&0xFFFFFF) << 8)|0xFF, Int));
 				}
 			} else {
 				//for(j=0;j < img.width;j++) {
 				for(j in 0...img.width) {
 					p = img.getPixel32(j,i);
 					IDAT.writeUnsignedInt(
-						cast(((p&0xFFFFFF) << 8)|
-						(p>>>24), UInt));
+						((p&0xFFFFFF) << 8)|
+						(p>>>24));
 				}
 			}
 		}
@@ -93,11 +93,11 @@ class PNGEncoder {
 		return png;
 	}
 
-	private static var crcTable:Array<UInt>;
+	private static var crcTable:Array<Int>;
 	private static var crcTableComputed:Bool  = false;
 
-	private static function writeChunk(png:ByteArray, type:UInt, data:ByteArray):Void {
-		var c:UInt;
+	private static function writeChunk(png:ByteArray, type:Int, data:ByteArray):Void {
+		var c:Int;
 		if (!crcTableComputed) {
 			crcTableComputed = true;
 			crcTable = [];
@@ -107,35 +107,36 @@ class PNGEncoder {
 				//for (var k:UInt = 0; k < 8; k++) {
 				for (k in 0...8) {
 					if (1 == c & 1) {
-						c = cast(cast(0xedb88320, UInt) ^ 
-							cast(c >>> 1, UInt), UInt);
+						//c = cast(cast(0xedb88320, UInt) ^ 
+						//	cast(c >>> 1, UInt), UInt);
+						c = 0xedb88320 ^ (c >>> 1);
 					} else {
-						c = cast(c >>> 1, UInt);
+						c = c >>> 1;
 					}
 				}
 				crcTable[n] = c;
 			}
 		}
-		var len:UInt = 0;
+		var len:Int = 0;
 		if (data != null) {
 			len = data.length;
 		}
 		png.writeUnsignedInt(len);
-		var p:UInt = png.position;
+		var p:Int = png.position;
 		png.writeUnsignedInt(type);
 		if ( data != null ) {
 			png.writeBytes(data);
 		}
-		var e:UInt = png.position;
+		var e:Int = png.position;
 		png.position = p;
 		c = 0xffffffff;
 		//for (var i:Int = 0; i < (e-p); i++) {
 		for (i in 0...(e - p)) {
-			c = cast(crcTable[
+			c = crcTable[
 				(c ^ png.readUnsignedByte()) & 
-				cast(0xff, UInt)] ^ cast(c >>> 8, UInt), UInt);
+				0xff] ^ (c >>> 8);
 		}
-		c = cast(c^cast(0xffffffff, UInt), UInt);
+		c = c^0xffffffff;
 		png.position = e;
 		png.writeUnsignedInt(c);
 	}
