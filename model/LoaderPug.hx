@@ -75,6 +75,7 @@ class LoaderPug
 			processLibZip( files );
 		#else
 			var reader:format.zip.Reader = new format.zip.Reader( input );
+			// flash allow compression flag Reader.hx:85 to >>> if( (flags & 0xF7F5) != 0 )
 			var files:List<format.zip.Data.Entry> = reader.read();
 			processLibZip( files );
 		#end
