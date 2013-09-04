@@ -78,14 +78,29 @@ class SymbolLayer extends Symbol
 	public function removeState( name:String ):Void {
         states.remove( name );
     }
+	
+	private function cmpString(a:String, b:String):Int
+	{
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		if (a < b) return -1;
+		if (a > b) return 1;
+		return 0;
+	}
 
     override public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		export = super.export( export );
 		var xml:Xml = export.xml;
 		xml.nodeName = "symbolLayer";
         var child_export:EXPORT_PUG;
-        for ( s in states ) {
-            child_export = s.export( export );
+		
+		var stateNames:Array<String> = [];
+		for ( k in states.keys() )
+			stateNames.push( k );
+		stateNames.sort(cmpString);
+		
+        for ( s in stateNames ) {
+            child_export = states[s].export( export );
             xml.addChild( child_export.xml );
         }
         export.xml = xml;        

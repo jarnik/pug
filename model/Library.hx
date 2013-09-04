@@ -1,7 +1,7 @@
 package pug.model;
 
 //import haxe.Int;
-import haxe.crypto.Crc32;
+//import haxe.crypto.Crc32;
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolShape;
@@ -77,7 +77,7 @@ class Library
 			bmd: null,
 			string: null,
             bytes: data,
-			crc: Crc32.make( data )
+			crc: 0// let filehandler do it Crc32.make( data )
         } );
         export.xml = xml;
 		return export;
