@@ -20,6 +20,7 @@ import haxe.zip.Reader;
 #end
 
 typedef LOADCONTENT = {
+	filename:String,
 	loader: Loader,
 	content: Bytes,
 	crc: Int
@@ -91,8 +92,8 @@ class LoaderPug
             extension = f.fileName.split(".").pop().toLowerCase();
             id = f.fileName.substr( 0, f.fileName.length - 4 );
             switch ( extension ) {
-                case "png":
-                    loadImage( id, f.data, f.crc32 );
+                case "png", "jpg":
+                    loadImage( f.fileName, id, f.data, f.crc32 );
                 case "xml":
                     libData.xml = Xml.parse( f.data.toString() );
 				case "svg":
@@ -117,10 +118,10 @@ class LoaderPug
         return ba;
     }
 	
-	private function loadImage( id:String, bytes:Bytes, crc:Int ):Void {
+	private function loadImage( filename:String, id:String, bytes:Bytes, crc:Int ):Void {
         var loader:Loader = new Loader();
 		loader.contentLoaderInfo.addEventListener( Event.COMPLETE, onImageLoaderComplete );
-        loadImagesLoaders.set( id, { loader: loader, content: bytes, crc: crc } );        
+        loadImagesLoaders.set( id, { filename:filename, loader: loader, content: bytes, crc: crc } );        
 		var ba:ByteArray;
         #if flash
         ba = bytes.getData();
@@ -140,7 +141,7 @@ class LoaderPug
             if ( loadImagesLoaders.get( id ).loader == loader ) {
                 //trace("A-HA! this is a "+id+" "+cast( loader.content, Bitmap ).bitmapData );
 				libData.images.set( id, { 
-					name: id,
+					name: loadImagesLoaders.get( id ).filename,
 					bmd: bitmapData, 
 					string: null,
 					bytes: loadImagesLoaders.get( id ).content,

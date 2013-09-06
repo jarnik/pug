@@ -9,6 +9,11 @@ import nme.utils.ByteArray;
 import pug.model.utils.PNGEncoder;
 import pug.model.Library;
 
+enum IMAGE_FILE_TYPE {
+	IMAGE_PNG;
+	IMAGE_JPG;
+}
+
 class SymbolImage extends Symbol
 {
     public static function parse( xml:Xml, l:Library, libData:LIB_DATA ):Symbol {
@@ -36,6 +41,7 @@ class SymbolImage extends Symbol
 	
 	private var dirty:Bool;
 	private var file:FILEDATA;
+	private var fileType:IMAGE_FILE_TYPE;
 
 	public function new ( id:String, bmd:BitmapData, frameWidth:Int = 0, frameHeight:Int = 0, frameCount:Int = 0, file:FILEDATA = null ) {
 		super( id );
@@ -47,6 +53,17 @@ class SymbolImage extends Symbol
 		
 		this.file = file;
 		dirty = ( file.crc == 0 );
+		
+		fileType = IMAGE_PNG;
+		if ( file != null ) {
+			var re:EReg = ~/[\\\/]?(?P<name>[^\.]*)\.([a-zA-Z]*)$/;
+			var matched:Bool = re.match( file.name );
+			var extension:String = re.matched( 2 );
+			if ( extension == "jpg" ) {
+				fileType = IMAGE_JPG;
+				dirty = false;
+			}
+		}
 		
 		this.frameWidth = frameWidth;
 		this.frameHeight = frameHeight;
@@ -77,7 +94,12 @@ class SymbolImage extends Symbol
 		export = super.export( export );
 		var xml:Xml = export.xml;
 		xml.nodeName = "sprite";
-        var filename:String = id+".png";
+        var filename:String = id;
+		switch ( fileType ) {
+			case IMAGE_PNG: filename += ".png";
+			case IMAGE_JPG: filename += ".jpg";
+		}
+		
 		xml.set( "data", filename );
 		xml.set( "frameWidth", Std.string( frameWidth ) );
 		xml.set( "frameHeight", Std.string( frameHeight ) );
