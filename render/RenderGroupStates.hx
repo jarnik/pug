@@ -59,7 +59,7 @@ class RenderGroupStates extends RenderGroup
 	}
 	
 	override public function render( frame:Int, applyTransforms:Bool = true ):Void {
-		var state:String = cast( effect, EffectSymbolLayer ).gizmoAttributes.params[ 3 ].getValues( frame )[ 0 ];
+		var state:String = cast( effect, EffectSymbolLayer ).paramState.getValues( frame )[ 0 ];
 		if ( currentState != state && applyTransforms )
 			switchState( state );
 		frameCount = group.groupFrames;

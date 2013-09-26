@@ -12,11 +12,12 @@ import pug.model.value.ValueString;
  */
 class EffectSymbolLayer extends EffectSymbol
 {
+	public var paramState:Param;
 
 	public function new( symbol:Symbol ) {
 		super( symbol );
 		gizmoAttributes.params.push( 
-			new Param( "State", [ new ValueString( SymbolLayer.getDefaultStateName() ) ] ) 
+			paramState = new Param( "State", [ new ValueString( SymbolLayer.getDefaultStateName() ) ] ) 
 		);
 	}
 	
