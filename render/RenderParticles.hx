@@ -16,7 +16,10 @@ class RenderParticles extends Render
 {
 	public var particleContainer:DisplayObjectContainer;
 	public var attractor:Point;
-	public var rangeOverride:Rectangle;
+	// define a range to create new particles
+	public var rangeOverride(get,set):Rectangle;
+	private var _rangeOverride:Rectangle;
+	// particle states are not cached
 	public var realtimeMode:Bool;
 
 	private var range:Rectangle;
@@ -165,7 +168,7 @@ class RenderParticles extends Render
 		var s:ParticleState;
 		var p:Particle;
 		for ( i in 0...particles.length ) {
-			if ( isWithinEmitRange( i, particles.length, state.nextIndex, emitNewParticles ) ) { 
+			if ( isWithinEmitTimeFrame( i, particles.length, state.nextIndex, emitNewParticles ) ) { 
 				// particle is within newly emitted range
 				p = particles[ i ];
 				s = { position: new Point(), velocity: new Point(), acceleration: new Point( paramAccel[0], paramAccel[1] ),
@@ -211,15 +214,24 @@ class RenderParticles extends Render
 		return state;
     }
 	
-	private function isWithinEmitRange( i:Int, cycle:Int, rangeStart:Int, rangeLength:Int ):Bool {
-		if ( rangeStart + rangeLength > cycle ) {
-			return ( i >= rangeStart || i < (rangeStart + rangeLength) % cycle );
+	private function isWithinEmitTimeFrame( i:Int, cycle:Int, timeFrameStart:Int, timeFrameLength:Int ):Bool {
+		if ( timeFrameStart + timeFrameLength > cycle ) {
+			return ( i >= timeFrameStart || i < (timeFrameStart + timeFrameLength) % cycle );
 		} else {
-			return ( i >= rangeStart && i < rangeStart + rangeLength );
+			return ( i >= timeFrameStart && i < timeFrameStart + timeFrameLength );
 		}
 		return false;
 	}
 	
+	public function get_rangeOverride():Rectangle {
+		return _rangeOverride;
+	}
+	
+	public function set_rangeOverride(r:Rectangle):Rectangle {
+		_rangeOverride = r;
+		range = r;
+		return r;
+	}
 }
 
 typedef ParticleSystemState = {
