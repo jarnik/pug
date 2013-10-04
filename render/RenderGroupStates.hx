@@ -52,9 +52,8 @@ class RenderGroupStates extends RenderGroup
 	}
 	
 	override public function play( loop:Bool = false, fps:Float = 0, state:String = null, onFinishedCallback:Dynamic = null ):Void {
-		if ( state != null ) {
+		if ( state != null && currentState != state )
 			switchState( state );
-		}
 		super.play( loop, fps, state, onFinishedCallback );
 	}
 	
