@@ -13,12 +13,12 @@ class GizmoParticles extends Gizmo
 	public var paramTemplate:Param; // symbol name + state name
 	public var paramFrames:Param; // 0 means particle frame is set randomly at start
 	public var paramFadeout:Param;
-	public var paramCount:Param; // 0 means particle frame is set randomly at start
+	public var paramCount:Param; // how many particles
 	public var paramSize:Param;
 	public var paramLife:Param;
 	public var paramVelocityX:Param;
 	public var paramVelocityY:Param;
-	public var paramCycle:Param;
+	public var paramCycle:Param; // how often should I release new particle, 0 means all at once
 	public var paramAcceleration:Param;
 
 	public function new() 

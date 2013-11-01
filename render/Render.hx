@@ -120,7 +120,7 @@ class Render extends Sprite
 	public var effect:Effect;
 	public var player:Player;
 	public var renderUpdatesEnabled:Bool;
-	public var infinite:Bool;
+	public var infinite:Bool; // will render its frames to infinite
 	public var frameCount:Int;
 	public var manualAlignRange:Rectangle;
 	public var alignmentSize:Rectangle;

@@ -22,7 +22,6 @@ class RenderParticles extends Render
 	// particle states are not cached
 	public var realtimeMode:Bool;
 
-	private var range:Rectangle;
     private var particles:Array<Particle>;
     private var states:Map<String,ParticleSystemState>;
     private var hash:String;
@@ -56,17 +55,7 @@ class RenderParticles extends Render
         var s:Symbol = Library.lib.get( symbolName );        
         if ( s == null )
             return;
-        
-        var paramSize:Array<Dynamic> = cast( effect, EffectParticleEmitter ).gizmoParticles.paramSize.getValues( 0 );      
-		if ( rangeOverride == null ) {
-			range = new Rectangle();
-			range.width = paramSize[ 0 ];
-			range.height = paramSize[ 1 ];
-			range.x = -range.width / 2;
-			range.y = -range.height / 2;
-		} else {
-			range = rangeOverride;
-		}
+               
         var particleCount:Int = cast( effect, EffectParticleEmitter ).gizmoParticles.paramCount.getValues( 0 )[ 0 ];
         var r:Render;
         var p:Particle;
@@ -132,28 +121,32 @@ class RenderParticles extends Render
         var paramFadeout:Float = 0;
         var paramLife:Float = 1;
         var paramCycle:Array<Dynamic> = null;
+		var paramSize:Array<Dynamic> = null;
 		var randomFrames:Bool = false;
+		var range:Rectangle = null;
 		
 		paramFadeout = cast( effect, EffectParticleEmitter ).gizmoParticles.paramFadeout.getValues( 0 )[ 0 ];
 		randomFrames = (cast( effect, EffectParticleEmitter ).gizmoParticles.paramFrames.getValues( 0 )[0] == 1);
 		paramCycle = cast( effect, EffectParticleEmitter ).gizmoParticles.paramCycle.getValues( 0 );
 		
 		var emitNewParticles:Int = 0;
+		var cycle:Float = paramCycle[0];
+		var cycleVariance:Float = paramCycle[1];
 		if ( frame == 0 ) {
-			if ( paramCycle[0] == 0 ) {
+			if ( cycle == 0 ) {
 				emitNewParticles = particles.length;
 				state.emitTimer = Math.POSITIVE_INFINITY;
 			} else {
-				emitNewParticles = Math.floor( Math.max( 1, 1 / paramCycle[0] ) );
+				emitNewParticles = Math.floor( Math.max( 1, 1 / cycle ) );
 				state.emitTimer = 0;
 			}
 		} else {
 			state.emitTimer = prevState.emitTimer;
 			state.nextIndex = prevState.nextIndex;
 			if ( state.emitTimer != Math.POSITIVE_INFINITY ) {
-				var d:Float = (frame - state.emitTimer);
-				emitNewParticles =  Math.floor( d / paramCycle[0] );
-				state.emitTimer += emitNewParticles * paramCycle[0] + Math.random() * paramCycle[1];
+				var d:Float = (cast( frame, Float) - state.emitTimer);
+				emitNewParticles =  Math.floor( d / cycle );
+				state.emitTimer += emitNewParticles * cycle + Math.random() * cycleVariance;
 			}
 		}
 		
@@ -162,6 +155,17 @@ class RenderParticles extends Render
             paramVelocityY = cast( effect, EffectParticleEmitter ).gizmoParticles.paramVelocityY.getValues( frame );
 			paramLife = cast( effect, EffectParticleEmitter ).gizmoParticles.paramLife.getValues( frame )[ 0 ];
 			paramAccel = cast( effect, EffectParticleEmitter ).gizmoParticles.paramAcceleration.getValues( frame );
+			
+			paramSize = cast( effect, EffectParticleEmitter ).gizmoParticles.paramSize.getValues( frame );      
+			if ( rangeOverride == null ) {
+				range = new Rectangle();
+				range.width = paramSize[ 0 ];
+				range.height = paramSize[ 1 ];
+				range.x = -range.width / 2;
+				range.y = -range.height / 2;
+			} else {
+				range = rangeOverride;
+			}
 		}
 		
 		var o:ParticleState;
@@ -229,7 +233,6 @@ class RenderParticles extends Render
 	
 	public function set_rangeOverride(r:Rectangle):Rectangle {
 		_rangeOverride = r;
-		range = r;
 		return r;
 	}
 }
