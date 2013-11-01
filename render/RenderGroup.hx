@@ -9,6 +9,7 @@ enum STICKER {
 	ADD( d:DisplayObject );
 	INFINITE;
 	HIDE_RENDERS;
+	TINT( color:Int );
 }
 
 /**
@@ -50,6 +51,10 @@ class RenderGroup extends Render
 	
 	public function addStickerInfinite( id:String ):Void {
         stickers.set( id+"===INFINITE", INFINITE );
+    }
+	
+	public function addStickerTint( id:String, tint:Int ):Void {
+        stickers.set( id+"===TINT", TINT( tint ) );
     }
 	
 	override private function onSetFrame( f:Int ):Void {
@@ -112,6 +117,8 @@ class RenderGroup extends Render
 						r.hideContents();
 					case INFINITE:
 						r.infinite = true;
+					case TINT( c ):
+						Render.tint( r, c );
 				}
 			}
 		}

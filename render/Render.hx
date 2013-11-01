@@ -2,6 +2,7 @@ package pug.render;
 
 import flash.display.DisplayObject;
 import flash.geom.Rectangle;
+import nme.geom.ColorTransform;
 import nme.geom.Point;
 import nme.Lib;
 import pug.model.effect.Effect;
@@ -115,7 +116,19 @@ class Render extends Sprite
 	private static function applyAttributes( g:GizmoAttributes, d:DisplayObject, frame:Int = 0 ):Void {
 		var alpha:Array<Dynamic> = g.paramAlpha.getValues( frame );
         d.alpha = alpha[ 0 ];
+		var paramTintColor:Array<Dynamic> = g.paramTintColor.getValues( frame );
+		var color:Int = paramTintColor[0];
+		if ( color != 0xffffff )
+			tint( d, color );
     }
+	
+	public static function tint( d: DisplayObject, color:Int ):Void {
+		d.transform.colorTransform = new ColorTransform( 
+			((color >> 16) & 255) / 255,
+			((color >> 8) & 255) / 255,
+			(color & 255) / 255
+		);
+	}
 		
 	public var effect:Effect;
 	public var player:Player;
