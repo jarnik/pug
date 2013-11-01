@@ -130,7 +130,7 @@ class RenderParticles extends Render
 		paramCycle = cast( effect, EffectParticleEmitter ).gizmoParticles.paramCycle.getValues( 0 );
 		
 		var emitNewParticles:Int = 0;
-		var cycle:Float = paramCycle[0];
+		var cycle:Float = paramCycle[0]; // HACK! - says (paramCycle[0] == 0) is true even if its 0.5
 		var cycleVariance:Float = paramCycle[1];
 		if ( frame == 0 ) {
 			if ( cycle == 0 ) {
