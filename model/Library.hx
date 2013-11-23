@@ -58,6 +58,8 @@ class Library
 	}
 	
 	public function export():EXPORT_PUG {
+		sortSymbols();
+		
 		var xml:Xml = Xml.createElement("library");
         var export:EXPORT_PUG = {
             xml:xml,
@@ -114,8 +116,22 @@ class Library
         }
         //trace("done cycles "+cycle);
 		
+		sortSymbols();
+		
 		onLibLoaded.dispatch();
     }
+	
+	private function cmpSymbols( a:Symbol, b:Symbol ):Int {
+		if ( a.id == b.id )
+			return 0;
+		if ( a.id > b.id )
+			return 1;
+		return -1;
+	}
+	
+	public function sortSymbols():Void {
+		symbols.sort( cmpSymbols );
+	}
 	
 	public function removeSymbol( s:Symbol ):Void {
 		symbols.remove( s );
