@@ -1,6 +1,6 @@
 package pug.render;
 
-import hsl.haxe.DirectSignaler;
+import pug.model.utils.Signaler;
 import nme.events.Event;
 import nme.Lib;
 
@@ -10,7 +10,7 @@ import nme.Lib;
  */
 class Player
 {
-	public var onSetFrame:DirectSignaler<Int>;
+	public var onSetFrame:Signaler<Int>;
 	
 	private var useCustomClock:Bool;
 	public var loop:Bool;
@@ -30,7 +30,7 @@ class Player
 		fps = 16;
 		this.useCustomClock = useCustomClock;
 		
-		onSetFrame = new DirectSignaler(this);
+		onSetFrame = new Signaler();
 		if ( useCustomClock )
 			Lib.current.stage.addEventListener (Event.ENTER_FRAME, stage_onEnterFrame);
 	}

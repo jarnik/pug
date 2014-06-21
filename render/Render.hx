@@ -11,8 +11,10 @@ import pug.model.effect.EffectSymbolLayer;
 import pug.model.effect.EffectGroup;
 import pug.model.effect.EffectParticleEmitter;
 import pug.model.effect.EffectText;
+#if pug_svg
 import pug.model.effect.EffectRef;
 import pug.model.effect.EffectSub;
+#end
 import pug.model.effect.IEffectGroup;
 import pug.model.gizmo.GizmoAlignment;
 import pug.model.Library;
@@ -21,8 +23,8 @@ import pug.model.symbol.SymbolLayer;
 import pug.model.symbol.SymbolLayerState;
 #if pug_svg
 import pug.model.symbol.SymbolShape;
-#end
 import pug.model.symbol.SymbolSub;
+#end
 import pug.model.gizmo.GizmoAttributes;
 import pug.model.gizmo.GizmoTransform;
 import pug.model.value.ValueFloat;
@@ -53,9 +55,9 @@ class Render extends Sprite
 		#if pug_svg
 		} else if ( Std.is( s, SymbolShape ) ) {
 			r = new RenderShape( null, cast( s, SymbolShape ) );
-		#end
 		} else if ( Std.is( s, SymbolSub ) ) {
 			r = new RenderSub( null, cast( s, SymbolSub ) );
+		#end
 		}
 		
 		if ( r != null ) {
@@ -91,9 +93,9 @@ class Render extends Sprite
 			#if pug_svg
             } else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolShape ) ) {
 				return new RenderShape( e, cast( cast( e, EffectSymbol ).symbol, SymbolShape ) );
-			#end
 			} else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolSub ) ) {
 				return new RenderSub( e, cast( cast( e, EffectSymbol ).symbol, SymbolSub ) );
+			#end
             } else
 				return null;
 		} else if( Std.is( e, EffectGroup ) ) {
@@ -102,8 +104,10 @@ class Render extends Sprite
 			return new RenderParticles( e );	
         } else if( Std.is( e, EffectText ) ) {
 			return new RenderText( e );	
+		#if pug_svg
 		} else if( Std.is( e, EffectSub ) ) {
 			return new RenderSub( e, cast( e, EffectSub ) );	
+		#end
         }
 		return null;
 	}
@@ -181,6 +185,7 @@ class Render extends Sprite
 	}
 	
 	public function renderSubElements( frame:Int ):Void {
+		#if pug_svg
 		var d:DisplayObject;
 		if ( effect != null )
 			for ( e in effect.refs ) {
@@ -190,6 +195,7 @@ class Render extends Sprite
 					applyAttributes( e.gizmoAttributes, d, frame );
 				}
 			}
+		#end
 	}
 	
 	public function fetchSubElement( path:Array<Int> ):DisplayObject {

@@ -11,8 +11,7 @@ import haxe.io.Bytes;
 import nme.events.Event;
 import nme.utils.ByteArray;
 import pug.model.symbol.SymbolImage;
-
-import hsl.haxe.DirectSignaler;
+import pug.model.utils.Signaler;
 
 #if neko
 import sys.io.FileInput;
@@ -32,7 +31,7 @@ typedef LOADCONTENT = {
  */
 class LoaderPug
 {
-	public var onLibDataLoaded:DirectSignaler<LIB_DATA>;
+	public var onLibDataLoaded:Signaler<LIB_DATA>;
 	
 	private var filesToLoad:Int;
     private var filesLoaded:Int;
@@ -42,7 +41,7 @@ class LoaderPug
 
 	public function new() 
 	{
-		onLibDataLoaded = new DirectSignaler(this);
+		onLibDataLoaded = new Signaler();
 	}
 	
 	private function resetLoading():Void {
@@ -95,8 +94,9 @@ class LoaderPug
                 case "png", "jpg":
                     loadImage( f.fileName, id, f.data, f.crc32 );
                 case "xml":
-                    libData.xml = Xml.parse( f.data.toString() );
+                    libData.xml = Xml.parse( f.data.toString() );                
 				case "svg":
+				#if pug_svg
 					libData.svgs.set( id, {
 						name: id, 
 						bmd: null,
@@ -105,6 +105,7 @@ class LoaderPug
 						crc: f.crc32
 					});	
 					filesLoaded++;        
+				#end
             }
         }
 		checkFilesLoaded();

@@ -2,7 +2,9 @@ package pug.model.symbol;
 import nme.geom.Rectangle;
 
 import pug.model.Library;
+#if pug_svg
 import pug.model.symbol.ISymbolSub;
+#end
 
 /**
  * ...
@@ -24,9 +26,9 @@ class Symbol
 					s = SymbolSub.parse( xml, l, libData );
 				else
 					s = SymbolShape.parse( xml, l, libData );
-			#end
 			case "symbolSub":
                 s = SymbolSub.parse( xml, l, libData );
+            #end
         }
 		if ( s != null ) {
 			if ( xml.get("width") != null ) {
@@ -45,10 +47,12 @@ class Symbol
 		this.id = id;
 		size = new Rectangle();
 	}
-	
+
+	#if pug_svg	
 	public function fetchSymbolSub( path:String ):SUBASSET {
 		return null; 
 	}
+	#end
 	
 	public function export( export:EXPORT_PUG ):EXPORT_PUG {
 		var xml:Xml = Xml.createElement("symbol");

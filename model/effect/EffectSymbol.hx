@@ -1,5 +1,5 @@
 package pug.model.effect;
-import pug.model.symbol.ISymbolSub;
+
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolLayer;
 import pug.model.Library;

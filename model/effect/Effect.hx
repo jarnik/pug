@@ -38,6 +38,7 @@ class Effect
                 e = new EffectParticleEmitter();
 			case "text":            
                 e = new EffectText();
+            #if pug_svg    
 			case "ref", 
 				"subElement":  // backward compat
 				var source:Effect = parent.fetchChild(xml.get("source"));
@@ -53,6 +54,7 @@ class Effect
 					xml.get("source"),
 					xml.get("path")
 				);
+			#end
             default:
         }
 		e.id = id;
@@ -96,8 +98,10 @@ class Effect
 	public var gizmoAttributes:GizmoAttributes;
 	public var gizmoAlignment:GizmoAlignment;
 	
+	#if pug_svg
 	public var refs:Array<EffectRef>;
-	
+	#end
+
 	public function new( gizmos:Array<Gizmo> ) 
 	{
 		this.gizmos = gizmos;
@@ -108,7 +112,9 @@ class Effect
 		
 		renderable = true;
 		cachedBitmap = false;
+		#if pug_svg
 		refs = [];
+		#end
 
         id = "effect"+Math.floor(Math.random()*1000);
 		
@@ -148,7 +154,9 @@ class Effect
 			gizmos[i].copy( e.gizmos[ i ] ); 
 	}
 	
+	#if pug_svg
 	public function addRef( e:EffectRef ):Void {
 		refs.push( e );
 	}
+	#end
 }

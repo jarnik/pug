@@ -1,7 +1,5 @@
 package pug.model;
 
-//import haxe.Int;
-//import haxe.crypto.Crc32;
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolImage;
 #if pug_svg
@@ -13,7 +11,7 @@ import pug.model.utils.XmlFormatter;
 import nme.display.BitmapData;
 import nme.utils.ByteArray;
 
-import hsl.haxe.DirectSignaler;
+import pug.model.utils.Signaler;
 import haxe.io.Bytes;
 import haxe.io.Input;
 
@@ -47,7 +45,7 @@ class Library
 
 	public var symbols:Array<Symbol>;
 	private var loaderPug:LoaderPug;
-	public var onLibLoaded:DirectSignaler<Void>;
+	public var onLibLoaded:Signaler<Void>;
 	
 	public function new() 
 	{
@@ -55,7 +53,7 @@ class Library
 		loaderPug = new LoaderPug();
 		loaderPug.onLibDataLoaded.bind( importLibData );
 		
-		onLibLoaded = new DirectSignaler(this);
+		onLibLoaded = new Signaler();
         lib = this;
 	}
 	

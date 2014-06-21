@@ -14,7 +14,7 @@ import nme.text.Font;
  */
 class RenderText extends Render
 {
-	private var tf:TextField;
+	public var tf:TextField;
 	private var format:TextFormat;
 	private var fixedLabel:String;
 
