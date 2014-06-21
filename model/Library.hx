@@ -4,7 +4,9 @@ package pug.model;
 //import haxe.crypto.Crc32;
 import pug.model.symbol.Symbol;
 import pug.model.symbol.SymbolImage;
+#if pug_svg
 import pug.model.symbol.SymbolShape;
+#end
 import nme.Assets;
 import Xml;
 import pug.model.utils.XmlFormatter;
@@ -155,7 +157,8 @@ class Library
 			symbols.push( new SymbolImage( id, img.bmd, 0, 0, 1, img ) );
 	}
 	
-	public function importSVG( id:String, svg:String ):Void {
+	#if pug_svg
+	public function importSVG( id:String, svg:String ):Void {		
 		var duplicate:Symbol = get( id );
 		if ( duplicate != null ) {
 			if ( Std.is( duplicate, SymbolShape ) )
@@ -169,6 +172,7 @@ class Library
 				crc: 0
 			}) );
 	}
+	#end
 
     public static function BAtoBytes( ba:ByteArray ):Bytes {
         var b:Bytes = Bytes.alloc( ba.length );

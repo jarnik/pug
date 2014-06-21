@@ -17,12 +17,14 @@ class Symbol
                 s = SymbolImage.parse( xml, l, libData );
             case "symbolLayer":
                 s = SymbolLayer.parse( xml, l, libData );
+            #if pug_svg
 			case "symbolShape":
 				// backwards compatibility
 				if ( xml.get("source") != null )
 					s = SymbolSub.parse( xml, l, libData );
 				else
 					s = SymbolShape.parse( xml, l, libData );
+			#end
 			case "symbolSub":
                 s = SymbolSub.parse( xml, l, libData );
         }

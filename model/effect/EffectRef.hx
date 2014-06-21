@@ -3,7 +3,9 @@ package pug.model.effect;
 import pug.model.faxe.DisplayNode;
 import pug.model.faxe.DisplayShape;
 import pug.model.faxe.IDisplayNode;
+#if pug_svg
 import pug.model.symbol.SymbolShape;
+#end
 import pug.model.Library;
 
 /**
@@ -32,6 +34,7 @@ class EffectRef extends Effect
 	}
 	
 	public function realign():Void {
+		#if pug_svg
 		var rx:Float = 0;
 		var ry:Float = 0;
 		
@@ -50,6 +53,7 @@ class EffectRef extends Effect
 		
 		gizmoTransform.paramPosition.values[ 0 ].setValue( rx );
 		gizmoTransform.paramPosition.values[ 1 ].setValue( ry );
+		#end
 	}
 	
 }

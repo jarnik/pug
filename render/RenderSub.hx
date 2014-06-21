@@ -50,6 +50,7 @@ class RenderSub extends Render
 					case SubAssetBitmapData( bmd ):
 						s = new Bitmap( bmd );
 						size = new Rectangle( 0, 0, bmd.width, bmd.height );
+					#if pug_svg
 					case SubAssetDisplayNode( n ):
 						s = RenderShape.renderDisplayNode( n );
 						s.x = 0;
@@ -57,6 +58,7 @@ class RenderSub extends Render
 						size = n.fixedSize.clone();
 						if ( effect.cachedBitmap )
 							forceCachedBitmap();
+					#end
 				}
 				if ( s != null ) {
 					addChild( s );

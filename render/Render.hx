@@ -19,7 +19,9 @@ import pug.model.Library;
 import pug.model.symbol.SymbolImage;
 import pug.model.symbol.SymbolLayer;
 import pug.model.symbol.SymbolLayerState;
+#if pug_svg
 import pug.model.symbol.SymbolShape;
+#end
 import pug.model.symbol.SymbolSub;
 import pug.model.gizmo.GizmoAttributes;
 import pug.model.gizmo.GizmoTransform;
@@ -48,8 +50,10 @@ class Render extends Sprite
 			r.effect.gizmoAttributes.params[3].values[0].setValue( cast( s, SymbolLayer ).getFirstStateName() );
         } else if ( Std.is( s, SymbolImage ) ) {
 			r = new RenderImage( null, cast( s, SymbolImage ) );
+		#if pug_svg
 		} else if ( Std.is( s, SymbolShape ) ) {
 			r = new RenderShape( null, cast( s, SymbolShape ) );
+		#end
 		} else if ( Std.is( s, SymbolSub ) ) {
 			r = new RenderSub( null, cast( s, SymbolSub ) );
 		}
@@ -84,8 +88,10 @@ class Render extends Sprite
 		} else if ( Std.is( e, EffectSymbol ) ) {
             if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolImage ) ) {
 				return new RenderImage( e, cast( cast( e, EffectSymbol ).symbol, SymbolImage ) );
+			#if pug_svg
             } else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolShape ) ) {
 				return new RenderShape( e, cast( cast( e, EffectSymbol ).symbol, SymbolShape ) );
+			#end
 			} else if ( Std.is( cast( e, EffectSymbol ).symbol, SymbolSub ) ) {
 				return new RenderSub( e, cast( cast( e, EffectSymbol ).symbol, SymbolSub ) );
             } else
