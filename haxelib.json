@@ -1,0 +1,10 @@
+{
+	"name": "pug",
+	"url": "https://github.com/jarnik/pug",
+	"tags": [],
+	"description": "GUI framework",
+	"version": "0.0.1",
+	"contributors": [ "jarnik" ],
+	"classPath": "src/",
+	"dependencies": {}
+}
