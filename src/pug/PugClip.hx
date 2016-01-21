@@ -1,6 +1,6 @@
 package pug;
 
-import pug.PugLib.PugRenderer;
+// import pug.PugLib.PugRenderer;
 
 enum ALIGN
 {
@@ -184,10 +184,11 @@ class PugClip
 
 	public function addLayer(layer:PugClip):Void
 	{
+		trace(name+" add PUG LAYER");
 		layers.push(layer);
-		layer.renderer = new PugRenderer();
+		layer.renderer = PugLib.createRenderer(); //new PugRenderer();
 		layer.parent = this;
-		renderer.add(layer.renderer);
+		renderer.addPug(layer.renderer);
 	}
 	
 	private function align(parentFrame:RECTANGLE) : RECTANGLE
@@ -207,7 +208,6 @@ class PugClip
 			if (innerFrame.w == 0)
 			{
 				innerFrame.w = this.renderer.contentWidth;
-				// trace(name+" CONTENT WIDTH "+innerFrame.w);
 			}
 			if (innerFrame.h == 0)
 			{

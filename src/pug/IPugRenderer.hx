@@ -6,7 +6,7 @@ import pug.PugLib.PugRenderer;
 interface IPugRenderer
 {
 
-	function add(child:IPugRenderer):Void;
+	function addPug(child:IPugRenderer):Void;
 
 	public var x(get,set):Float;
 	public var y(get,set):Float;

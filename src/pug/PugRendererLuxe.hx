@@ -2,25 +2,22 @@ package pug;
 
 import pug.PugClip;
 
-import fig.Component;
-import fig.Image;
-import fig.Text;
-import fig.Node;
+import luxe.Sprite;
+import luxe.Text;
+import luxe.Vector;
 
-class PugRendererFig extends Component implements IPugRenderer
+class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 {
 
-	public function add(child:IPugRenderer):Void
+	public function addPug(child:IPugRenderer):Void
 	{
-		// PugRendererFig has no parent yet, need to create one here
-		var node:Node = this.node.addChild(new Node());
-		node.addExistingComponent(cast(child,PugRendererFig));
+		cast(child,luxe.Entity).parent = this;
 	}
 
 	private var width : Float = 0;
 	private var height : Float = 0;
 
-	private var imageComponent:Image;
+	private var imageComponent:Sprite;
 	private var currentImage:String;
 	
 	private var textComponent:Text;
@@ -39,14 +36,25 @@ class PugRendererFig extends Component implements IPugRenderer
 		{
 			return url;
 		}
+		this.currentImage = url;
 
 		if (this.imageComponent == null)
 		{
-			this.imageComponent = this.node.addComponent(Image);
+			this.imageComponent = new Sprite({
+				parent: this,
+				centered: false
+			});
 		}
-		this.currentImage = url;
-		this.imageComponent.url = url;//openfl.Assets.getBitmapData(this.currentImage);
-		this.imageComponent.tint = this.currentColor;
+		this.imageComponent.texture = Luxe.resources.texture(url);
+		this.imageComponent.size = new Vector(
+			this.imageComponent.texture.width,
+			this.imageComponent.texture.height
+		);
+		var c:luxe.Color = new luxe.Color();
+		c.rgb(this.currentColor);
+		c.a = this.alpha;
+		this.imageComponent.color = c;
+		
 		return url;
 	}
 
@@ -62,21 +70,15 @@ class PugRendererFig extends Component implements IPugRenderer
 			return text;
 		}
 		
+		/*
 		if (this.textComponent == null)
 		{
 			this.textComponent = this.node.addComponent(Text);
 		}
-		textComponent.text = text;
+		textComponent.text = text;*/
 		this.currentText = text;
 		return text;
 	}
-	
-	/*
-	public var tf(get,null):TextField;
-	public function get_tf():TextField
-	{
-		return this.textfield;
-	}*/
 
 	public var textSettings(get,set):TEXT_SETTINGS;
 	public function get_textSettings():TEXT_SETTINGS
@@ -96,12 +98,13 @@ class PugRendererFig extends Component implements IPugRenderer
 		{
 			return settings;
 		}
-			
+		
+		/*	
 		if (this.textComponent == null)
 		{
 			this.text = ""; // to create a textfield
 		}
-		this.currentTextSettings = Reflect.copy(settings);
+		this.currentTextSettings = Reflect.copy(settings);*/
 		/*
 		if (this.textFormat == null)
 		{
@@ -123,10 +126,12 @@ class PugRendererFig extends Component implements IPugRenderer
 		/*this.textFormat.color = settings.color;
 		this.textfield.defaultTextFormat = this.textFormat;
 		this.textfield.text = this.currentText;*/
+		/*
 		this.textComponent.font = settings.font;
         this.textComponent.fontSize = settings.size;
         this.textComponent.alignment = settings.alignment;
         this.textComponent.color = settings.color;
+		*/
 		
 		return settings;
 	}
@@ -141,7 +146,7 @@ class PugRendererFig extends Component implements IPugRenderer
 		this.width = value;
 		if ( this.imageComponent != null)
 		{
-			this.node.transform.scaleX = (this.width / this.contentWidth);
+			this.imageComponent.scale.x = (this.width / this.contentWidth);
 			// trace("w "+value);
 		}
 		// TODO must get exact text size from TF
@@ -165,12 +170,13 @@ class PugRendererFig extends Component implements IPugRenderer
 	}
 	public function set_h(value:Float):Float
 	{
-		this.height = value;
+		this.height = value;		
 		if (this.imageComponent != null)
 		{
-			this.node.transform.scaleY = (this.height / this.contentHeight);
+			this.imageComponent.scale.y = (this.height / this.contentHeight);
 			// trace("h "+value);
 		}
+		
 		/*
 		// TODO must get exact text size from TF
 		if ( this.textComponent != null )
@@ -202,7 +208,10 @@ class PugRendererFig extends Component implements IPugRenderer
 
 		if (this.imageComponent != null)
 		{
-			this.imageComponent.tint = value;
+			var c:luxe.Color = new luxe.Color();
+			c.rgb(this.currentColor);
+			c.a = this.alpha;
+			this.imageComponent.color = c;
 		}
 
 		this.currentColor = value;
@@ -221,26 +230,28 @@ class PugRendererFig extends Component implements IPugRenderer
 	public var contentWidth(get,null):Float;
 	public function get_contentWidth():Float
 	{
-		if (this.imageComponent != null)
+		if (this.imageComponent != null && this.imageComponent.texture != null)
 		{
-			return this.imageComponent.getContentWidth();
-		} else if (this.textComponent != null)
+			return return this.imageComponent.texture.width;
+		}
+		/* else if (this.textComponent != null)
 		{
 			return this.textComponent.getContentWidth();
-		}
+		}*/
 		return 0;
 	}
 	
 	public var contentHeight(get,null):Float;
 	public function get_contentHeight():Float
-	{
-		if (this.imageComponent != null)
+	{		
+		if (this.imageComponent != null && this.imageComponent.texture != null)
 		{
-			return this.imageComponent.getContentHeight();
-		} else if (this.textComponent != null)
+			return this.imageComponent.texture.height;
+		} 
+		/*else if (this.textComponent != null)
 		{
 			return this.textComponent.getContentHeight();
-		}
+		}*/
 		return 0;
 	}
 	
@@ -248,44 +259,44 @@ class PugRendererFig extends Component implements IPugRenderer
 	public var x(get,set) : Float;
 	public function get_x() : Float
 	{
-		return this.node.transform.x;
+		return this.pos.x;
 	}
 	public function set_x(value:Float) : Float
 	{
-		this.node.transform.x = value;
+		this.pos.x = value;
 		return this.x;
 	}
 	
 	public var y(get,set) : Float;
 	public function get_y() : Float
 	{
-		return this.node.transform.y;
+		return this.pos.y;
 	}
 	public function set_y(value:Float) : Float
 	{
-		this.node.transform.y = value;
+		this.pos.y = value;
 		return this.y;
 	}
 	
 	public var scaleX(get,set) : Float;
 	public function get_scaleX() : Float
 	{
-		return this.node.transform.scaleX;
+		return this.scale.x;
 	}
 	public function set_scaleX(value:Float) : Float
 	{
-		this.node.transform.scaleX = value;
+		this.scale.x = value;
 		return this.scaleX;
 	}
 	
 	public var scaleY(get,set) : Float;
 	public function get_scaleY() : Float
 	{
-		return this.node.transform.scaleY;
+		return this.scale.y;
 	}
 	public function set_scaleY(value:Float) : Float
 	{
-		this.node.transform.scaleY = value;
+		this.scale.y = value;
 		return this.scaleY;
 	}
 	
@@ -304,23 +315,12 @@ class PugRendererFig extends Component implements IPugRenderer
 	public var visible(get,set) : Bool;
 	public function get_visible() : Bool
 	{
-		return this.node.active;
+		return this.active;
 	}
 	public function set_visible(value:Bool) : Bool
 	{
-		this.node.active = value;
+		this.active = value;
 		return this.visible;
-	}
-	
-	public var name(get,set) : String;
-	public function get_name() : String
-	{
-		return this.node.name;
-	}
-	public function set_name(value:String) : String
-	{
-		this.node.name = value;
-		return this.name;
 	}
 	
 }

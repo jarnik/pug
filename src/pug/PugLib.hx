@@ -3,17 +3,28 @@ package pug;
 import pug.PugClip;
 
 // typedef PugRenderer = PugRendererSprite;
-typedef PugRenderer = PugRendererFig;
+// typedef PugRenderer = PugRendererFig;
 
 class PugLib 
 {
 
+	public static var rendererClass : Class<IPugRenderer>;
+	
+	public static function createRenderer(args:Array<Dynamic> = null) : IPugRenderer
+	{
+		if (args == null)
+		{
+			args = [];
+		}
+		return Type.createInstance(rendererClass, args);
+	}
+	
 	private var symbols:Map<String,PugClip>;
 
 	private var lines:Array<String>;
 	private var currentLine:Int;
 	private var defaultSymbolProps:String;
-
+	
 	public function new():Void
 	{
 	    
