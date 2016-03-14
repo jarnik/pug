@@ -5,6 +5,7 @@ import pug.PugClip;
 import luxe.Sprite;
 import luxe.Text;
 import luxe.Vector;
+import phoenix.Texture;
 
 class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 {
@@ -70,12 +71,28 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 			return text;
 		}
 		
-		/*
 		if (this.textComponent == null)
 		{
-			this.textComponent = this.node.addComponent(Text);
+			this.textComponent = /*new luxe.Text({
+				point_size : 32,
+			});*/
+			new Text({
+				parent: this,
+	            // pos : new Vector(20,20),
+	            // point_size : 32,
+	            // depth : 3,
+	            // align : TextAlign.center,
+	            font : Luxe.resources.font('assets/fonts/simplicity_10.fnt'),
+	            // text : 'DAY: 1'
+	            // color : new Color(0,0,0,0).rgb(0x242424)
+				
+	        });
+			
+			this.textComponent.font.pages.get(0).filter_min = FilterType.nearest;
+			this.textComponent.font.pages.get(0).filter_mag = FilterType.nearest;
 		}
-		textComponent.text = text;*/
+		textComponent.text = text;
+		
 		this.currentText = text;
 		return text;
 	}
@@ -98,40 +115,41 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 		{
 			return settings;
 		}
-		
-		/*	
+				
 		if (this.textComponent == null)
 		{
 			this.text = ""; // to create a textfield
 		}
-		this.currentTextSettings = Reflect.copy(settings);*/
+		this.currentTextSettings = Reflect.copy(settings);
 		/*
 		if (this.textFormat == null)
 		{
 			this.textFormat = new TextFormat();
-		}
+		}*/
 		if (settings.font != null)
 		{
-			this.textFormat.font = openfl.Assets.getFont(settings.font).fontName;
-		}*/
-/*#if cpp // non-legacy
-		this.textFormat.size = cast(settings.size,Int);
-		*/		
-		/*
-#else*/
-		/*
-		this.textFormat.size = settings.size;
-		this.textFormat.align = settings.alignment;*/
-//#end		
-		/*this.textFormat.color = settings.color;
-		this.textfield.defaultTextFormat = this.textFormat;
-		this.textfield.text = this.currentText;*/
-		/*
-		this.textComponent.font = settings.font;
-        this.textComponent.fontSize = settings.size;
-        this.textComponent.alignment = settings.alignment;
-        this.textComponent.color = settings.color;
-		*/
+			trace("FONT "+settings.font);
+			this.textComponent.font = Luxe.resources.font(settings.font);			
+			var textOriginal:String = this.text;
+			this.text = textOriginal+"X";
+			this.textComponent.sdf = false;
+			this.text = textOriginal;
+		}
+		
+		this.textComponent.point_size = settings.size;
+		switch ( settings.alignment )
+		{
+			case "right":
+				this.textComponent.align = luxe.TextAlign.right;
+			case "center":
+				this.textComponent.align = luxe.TextAlign.center;
+			default:
+				this.textComponent.align = luxe.TextAlign.left;
+		}
+		
+		var c:luxe.Color = new luxe.Color();
+		c.rgb(settings.color);
+		this.textComponent.color = c;
 		
 		return settings;
 	}
@@ -212,6 +230,14 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 			c.rgb(this.currentColor);
 			c.a = this.alpha;
 			this.imageComponent.color = c;
+		}
+		
+		if (this.textComponent != null)
+		{
+			var c:luxe.Color = new luxe.Color();
+			c.rgb(this.currentColor);
+			c.a = this.alpha;
+			this.textComponent.color = c;
 		}
 
 		this.currentColor = value;
