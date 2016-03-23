@@ -264,7 +264,7 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 	{
 		if (this.imageComponent != null && this.imageComponent.texture != null)
 		{
-			return return this.imageComponent.texture.width;
+			return this.imageComponent.texture.width;
 		}
 		/* else if (this.textComponent != null)
 		{
@@ -280,10 +280,10 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 		{
 			return this.imageComponent.texture.height;
 		} 
-		/*else if (this.textComponent != null)
+		else if (this.textComponent != null && this.textComponent.bounds != null)
 		{
-			return this.textComponent.getContentHeight();
-		}*/
+			return this.textComponent.bounds.h;
+		}
 		return 0;
 	}
 	
