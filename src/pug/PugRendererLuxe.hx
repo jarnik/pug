@@ -6,6 +6,7 @@ import luxe.Sprite;
 import luxe.Text;
 import luxe.Vector;
 import phoenix.Texture;
+import phoenix.Batcher;
 
 class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 {
@@ -13,7 +14,10 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 	public function addPug(child:IPugRenderer):Void
 	{
 		cast(child,luxe.Entity).parent = this;
+		cast(child,PugRendererLuxe).batcher = this.batcher;
 	}
+	
+	public var batcher : Batcher;
 
 	private var width : Float = 0;
 	private var height : Float = 0;
@@ -43,6 +47,7 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 		{
 			this.imageComponent = new Sprite({
 				parent: this,
+				batcher : this.batcher,
 				centered: false
 			});
 		}
@@ -83,6 +88,7 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 	            // depth : 3,
 	            // align : TextAlign.center,
 	            font : Luxe.resources.font('assets/fonts/simplicity_10.fnt'),
+				batcher : this.batcher
 	            // text : 'DAY: 1'
 	            // color : new Color(0,0,0,0).rgb(0x242424)
 				
