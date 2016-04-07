@@ -184,9 +184,8 @@ class PugClip
 
 	public function addLayer(layer:PugClip):Void
 	{
-		trace(name+" add PUG LAYER");
 		layers.push(layer);
-		layer.renderer = PugLib.createRenderer(); //new PugRenderer();
+		layer.renderer = PugLib.createRenderer();
 		layer.parent = this;
 		renderer.addPug(layer.renderer);
 	}

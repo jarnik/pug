@@ -46,6 +46,7 @@ class PugRendererLuxe extends luxe.Entity implements IPugRenderer
 		if (this.imageComponent == null)
 		{
 			this.imageComponent = new Sprite({
+				name: this.name+"_Sprite",
 				parent: this,
 				batcher : this.batcher,
 				centered: false
